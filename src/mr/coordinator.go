@@ -46,9 +46,16 @@ func (c *Coordinator) getReq(args *WorkerAsk, reply *CoordinatorReply) error {
 		//请求获取任务
 	}else if(args.status==1){
 		//map任务完成
+		if(c.files[args.fileName]==0){
+			c.files[args.fileName]=1
+			c.mapFinish++
+		}
 	}else if(args.status==2){
+		c.reduceFinish++
 		//reduce任务完成
 	}
+
+
 	c.mutex.Lock()//不明白为什么要用锁
 	count:=0
 	if(c.mapFinish==1){
