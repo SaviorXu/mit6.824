@@ -4,6 +4,8 @@ import "fmt"
 import "log"
 import "net/rpc"
 import "hash/fnv"
+import "os"
+import "io/ioutil"
 
 
 //
@@ -25,6 +27,29 @@ func ihash(key string) int {
 }
 
 
+func runMap(arg *CoordinatorReply,mapf func(string,string) []KeyValue) bool{
+	fileName:=arg.fileName
+	file,err := os.Open(fileName)
+	if err!=nil{
+		log.Fatalf("cannot open %v",fileName)
+		return false
+	}
+	content,err:=ioutil.ReadAll(file)
+	if err!=nil{
+		log.Fatalf("cannot read %v",fileName)
+		return false
+	}
+	file.Close()
+	kva:=mapf(fileName,string(content))
+	//将key-value写入到中间文件中
+
+	return true
+}
+
+func runReduce(arg *CoordinatorReply,reducef func(string,[]string) string) bool{
+	return true
+}
+
 //
 // main/mrworker.go calls this function.
 //
@@ -32,33 +57,44 @@ func Worker(mapf func(string, string) []KeyValue,
 	reducef func(string, []string) string) {
 
 	// Your worker implementation here.
-
+	
 	// uncomment to send the Example RPC to the coordinator.
-	// CallExample()
-
+	reply := CallExample()
+	//给coordinator发送一个RPC请求一个任务。
+	//读取文件内容，并调用Map函数
+	
+	if(reply.taskType == 0){
+		if(runMap(reply,mapf)==true){
+			//告诉coordinator已经完成该任务。返回文件名
+		}
+	}else{
+		if(runReduce(reply,reducef)==true){
+			//告诉coordinator已经完成该任务
+		}
+	}
 }
+
+
+
 
 //
 // example function to show how to make an RPC call to the coordinator.
 //
 // the RPC argument and reply types are defined in rpc.go.
 //
-func CallExample() {
+func CallExample() *CoordinatorReply{
 
 	// declare an argument structure.
-	args := ExampleArgs{}
+	args := WorkerAsk{}
 
-	// fill in the argument(s).
-	args.X = 99
 
 	// declare a reply structure.
-	reply := ExampleReply{}
+	reply :=CoordinatorReply{}
 
 	// send the RPC request, wait for the reply.
-	call("Coordinator.Example", &args, &reply)
+	call("Coordinator.getReq", &args, &reply)
 
-	// reply.Y should be 100.
-	fmt.Printf("reply.Y %v\n", reply.Y)
+	return &reply
 }
 
 //
