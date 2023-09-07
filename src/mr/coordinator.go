@@ -30,6 +30,7 @@ type Coordinator struct {
 }
 
 // Your code here -- RPC handlers for the worker to call.
+//coordinator还需要隔一段时间检查任务完成是否超时，10s内未完成将其给另外的worker
 
 func addReduce(c *Coordinator, reply *CoordinatorReply) {
 	if c.reduceIdx < c.nReduce {
@@ -46,7 +47,7 @@ func addMap(c *Coordinator, reply *CoordinatorReply) {
 	for fileName, status := range c.files {
 		if status == -1 {
 			reply.taskType = 0
-			reply.nreduce = c.nReduce
+			reply.nReduce = c.nReduce
 			reply.taskId = c.mapIdx
 
 			mapTask := &Task{time.Now(), fileName, c.mapIdx}

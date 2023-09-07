@@ -9,6 +9,8 @@ import (
 	"net/rpc"
 	"os"
 	"strconv"
+	"regexp"
+	"sort"
 )
 
 //
@@ -18,6 +20,11 @@ type KeyValue struct {
 	Key   string
 	Value string
 }
+
+type ByKey []KeyValue
+func (a ByKey) Len() int           { return len(a) }
+func (a ByKey) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByKey) Less(i, j int) bool { return a[i].Key < a[j].Key }
 
 //
 // use ihash(key) % NReduce to choose the reduce
@@ -45,7 +52,7 @@ func runMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
 	kva := mapf(fileName, string(content))
 	//将key-value写入到中间文件中
 	for _, value := range kva {
-		idx := ihash(value.Key)
+		idx := ihash(value.Key)%arg.nReduce
 		interFileName := "mr-" + strconv.Itoa(arg.taskId) + "-" + strconv.Itoa(idx)
 		file, err := os.OpenFile(interFileName, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
 		if err != nil {
@@ -64,6 +71,51 @@ func runMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
 
 func runReduce(arg *CoordinatorReply, reducef func(string, []string) string) bool {
 	//先获取该目录下的所有指定的文件，接着使用reducef
+	files,err:=os.ReadDir(".")
+	fileNames:="mr-"+"*"+"-"+strconv.Itoa(arg.taskId)
+	reg := regexp.MustCompile(fileNames)
+	if err!=nil{
+		fmt.Println("runReduce:read dir failed\n")
+		return false
+	}
+	var fileList []string
+	for _,file := range files{
+		if reg.MatchString(file.Name()){
+			fileList=append(fileList,file.Name())
+		}
+	}
+	var kva []KeyValue
+	for _,fileName := range fileList{
+		file,_ :=os.Open(fileName)
+		dec := json.NewDecoder(file)
+		for{
+			var kv KeyValue
+			if err:=dec.Decode(&kv);err!=nil{
+				break
+			}
+			kva=append(kva,kv)
+		}
+	}
+	sort.Sort(ByKey(kva))
+	oname:="mr-out-"+strconv.Itoa(arg.taskId)
+	ofile,_:=os.Create(oname)
+
+	i:=0
+	for i<len(kva){
+		j:=i+1
+		for j<len(kva)&&kva[j].Key==kva[i].Key{
+			j++
+		}
+		values:=[]string{}
+		for k:=i;k<j;k++{
+			values=append(values,kva[k].Value)
+		}
+		output:=reducef(kva[i].Key,values)
+		fmt.Fprintf(ofile, "%v %v\n", kva[i].Key, output)
+		i=j
+	}
+	ofile.Close()
+	return true
 }
 
 //
@@ -87,17 +139,12 @@ func Worker(mapf func(string, string) []KeyValue,
 			}
 
 		} else if reply.taskType == 1 {
-
+			if runReduce(&reply,reducef)==true{
+				finishReq := WorkerAsk{2,"",reply.taskId}
+				invalidReply:=CoordinatorReply{}
+				call("Coordinator.getReq", finishReq, invalidReply)
+			}
 		}
-	}
-}
-
-func OnlyCall(args *WorkerAsk, reply *CoordinatorReply) *CoordinatorReply {
-	call("Coordinator.getReq", &args, &reply)
-	if reply.taskType == 0 {
-
-	} else if reply.taskType == 1 {
-
 	}
 }
 
