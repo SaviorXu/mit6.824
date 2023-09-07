@@ -1,12 +1,15 @@
 package mr
 
-import "fmt"
-import "log"
-import "net/rpc"
-import "hash/fnv"
-import "os"
-import "io/ioutil"
-
+import (
+	"encoding/json"
+	"fmt"
+	"hash/fnv"
+	"io/ioutil"
+	"log"
+	"net/rpc"
+	"os"
+	"strconv"
+)
 
 //
 // Map functions return a slice of KeyValue.
@@ -26,75 +29,76 @@ func ihash(key string) int {
 	return int(h.Sum32() & 0x7fffffff)
 }
 
-
-func runMap(arg *CoordinatorReply,mapf func(string,string) []KeyValue) bool{
-	fileName:=arg.fileName
-	file,err := os.Open(fileName)
-	if err!=nil{
-		log.Fatalf("cannot open %v",fileName)
+func runMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
+	fileName := arg.fileName
+	file, err := os.Open(fileName)
+	if err != nil {
+		log.Fatalf("cannot open %v", fileName)
 		return false
 	}
-	content,err:=ioutil.ReadAll(file)
-	if err!=nil{
-		log.Fatalf("cannot read %v",fileName)
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatalf("cannot read %v", fileName)
 		return false
 	}
 	file.Close()
-	kva:=mapf(fileName,string(content))
+	kva := mapf(fileName, string(content))
 	//将key-value写入到中间文件中
-
+	for _, value := range kva {
+		idx := ihash(value.Key)
+		interFileName := "mr-" + strconv.Itoa(arg.taskId) + "-" + strconv.Itoa(idx)
+		file, err := os.OpenFile(interFileName, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
+		if err != nil {
+			fmt.Println("intermediate file open error", err)
+			return false
+		}
+		encoder := json.NewEncoder(file)
+		err = encoder.Encode(&value)
+		if err != nil {
+			fmt.Println("Encode error")
+			return false
+		}
+	}
 	return true
 }
 
-func runReduce(arg *CoordinatorReply,reducef func(string,[]string) string) bool{
-	return true
+func runReduce(arg *CoordinatorReply, reducef func(string, []string) string) bool {
+	//先获取该目录下的所有指定的文件，接着使用reducef
 }
 
 //
 // main/mrworker.go calls this function.
-//
+//给coordinator发送一个rpc请求任务（callExample）。
 func Worker(mapf func(string, string) []KeyValue,
 	reducef func(string, []string) string) {
 
 	// Your worker implementation here.
-	
-	// uncomment to send the Example RPC to the coordinator.
-	reply := CallExample()
-	//给coordinator发送一个RPC请求一个任务。
-	//读取文件内容，并调用Map函数
-	
-	if(reply.taskType == 0){
-		if(runMap(reply,mapf)==true){
-			//告诉coordinator已经完成该任务。返回文件名
-		}
-	}else{
-		if(runReduce(reply,reducef)==true){
-			//告诉coordinator已经完成该任务
+
+	args := WorkerAsk{}
+	args.status = 0
+	reply := CoordinatorReply{}
+	if call("Coordinator.getReq", &args, &reply) {
+		if reply.taskType == 0 {
+			if runMap(&reply, mapf) == true {
+				//向coordinator告知map结束
+				finishReq := WorkerAsk{1, reply.fileName, reply.taskId}
+				invalidReply := CoordinatorReply{}
+				call("Coordinator.getReq", finishReq, invalidReply)
+			}
+
+		} else if reply.taskType == 1 {
+
 		}
 	}
 }
 
-
-
-
-//
-// example function to show how to make an RPC call to the coordinator.
-//
-// the RPC argument and reply types are defined in rpc.go.
-//
-func CallExample() *CoordinatorReply{
-
-	// declare an argument structure.
-	args := WorkerAsk{}
-
-
-	// declare a reply structure.
-	reply :=CoordinatorReply{}
-
-	// send the RPC request, wait for the reply.
+func OnlyCall(args *WorkerAsk, reply *CoordinatorReply) *CoordinatorReply {
 	call("Coordinator.getReq", &args, &reply)
+	if reply.taskType == 0 {
 
-	return &reply
+	} else if reply.taskType == 1 {
+
+	}
 }
 
 //
