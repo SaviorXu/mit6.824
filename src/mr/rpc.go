@@ -9,6 +9,8 @@ package mr
 import (
 	"os"
 	"strconv"
+	"regexp"
+	"fmt"
 )
 
 //
@@ -20,16 +22,17 @@ import (
 // 	X int
 // }
 type WorkerAsk struct {
-	status   int //0表示请求任务，1表示完成map任务，2表示完成reduce任务
-	fileName string
-	taskId   int
+	Status   int //0表示请求任务，1表示完成map任务，2表示完成reduce任务
+	FileName string
+	TaskId   int
 }
 
 type CoordinatorReply struct {
-	taskType int //0表示map任务，1表示reduce任务,-1表示无任务
-	nReduce  int
-	fileName string
-	taskId   int
+	TaskType int //1表示map任务，2表示reduce任务,0表示无任务
+	NReduce  int
+	FileName string
+	TaskId   int//任务序号
+	ReduceId int//reduce文件所对应的下标
 }
 
 // Add your RPC definitions here.
@@ -42,4 +45,20 @@ func coordinatorSock() string {
 	s := "/var/tmp/824-mr-"
 	s += strconv.Itoa(os.Getuid())
 	return s
+}
+
+func GetFilesFromDir(fileName string) []string{
+	files,err:=os.ReadDir(".")
+	var fileList []string
+	reg := regexp.MustCompile(fileName)
+	if err!=nil{
+		fmt.Println("RunReduce:read dir failed")
+		return fileList
+	}
+	for _,file := range files{
+		if reg.MatchString(file.Name()){
+			fileList=append(fileList,file.Name())
+		}
+	}
+	return fileList	
 }
