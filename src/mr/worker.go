@@ -36,13 +36,17 @@ func ihash(key string) int {
 }
 
 func RunMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
+	// fmt.Println("RunMap")
 	fileName := arg.FileName
 	file, err := os.Open(fileName)
+	// fmt.Println("os.Open")
 	if err != nil {
-		log.Fatalf("cannot open %v", fileName)
+		// fmt.Printf("filename=%s",fileName)
+		log.Fatalf("RunMap:cannot open %v", fileName)
 		return false
 	}
 	content, err := ioutil.ReadAll(file)
+	// fmt.Println("ioutil.ReadAll")
 	if err != nil {
 		log.Fatalf("cannot read %v", fileName)
 		return false
@@ -61,10 +65,11 @@ func RunMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
 		}
 		tmpMap[idx]=tmpFile
 	}
-
+	// fmt.Println("write key_value")
 	//将key-value写入到中间文件中
 	for _, value := range kva {
 		idx := ihash(value.Key)%arg.NReduce
+		// fmt.Println("arg.NReduce",arg.NReduce)
 		encoder := json.NewEncoder(tmpMap[idx])
 		err = encoder.Encode(&value)
 		if err != nil {
@@ -76,20 +81,27 @@ func RunMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
 	for _,value:= range tmpMap{
 		 value.Close()
 	}
+	// fmt.Println("map finish")
 	return true
 }
 
 func RunReduce(arg *CoordinatorReply, reducef func(string, []string) string) bool {
 	//先获取该目录下的所有指定的文件，接着使用reducef
+	// fmt.Println("RunReduce")
 	fileNames:="mr-"+"*"+"-"+strconv.Itoa(arg.ReduceId)
 	fileList := GetFilesFromDir(fileNames)
 	var kva []KeyValue
 	for _,fileName := range fileList{
-		file,_ :=os.Open(fileName)
+		file,err :=os.Open(fileName)
+		if err!=nil{
+			fmt.Println("RunReduce open error",fileName)
+			break
+		}
 		dec := json.NewDecoder(file)
 		for{
 			var kv KeyValue
-			if err:=dec.Decode(&kv);err!=nil{
+			if err=dec.Decode(&kv);err!=nil{
+				// fmt.Println("decode error",fileName)
 				break
 			}
 			kva=append(kva,kv)
@@ -139,15 +151,19 @@ func Worker(mapf func(string, string) []KeyValue,
 					//向coordinator告知map结束
 					finishReq := WorkerAsk{1, reply.FileName, reply.TaskId}
 					invalidReply := CoordinatorReply{}
-					call("Coordinator.GetReq", finishReq, invalidReply)
+					call("Coordinator.GetReq", &finishReq, &invalidReply)
 				}
 
 			} else if reply.TaskType == 2 {
 				if RunReduce(&reply,reducef)==true{
 					finishReq := WorkerAsk{2,"",reply.TaskId}
 					invalidReply:=CoordinatorReply{}
-					call("Coordinator.GetReq", finishReq, invalidReply)
+					call("Coordinator.GetReq", &finishReq, &invalidReply)
 				}
+			}else if reply.TaskType==1{
+				continue
+			}else{
+				break
 			}
 		}
 	}

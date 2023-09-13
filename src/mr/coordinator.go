@@ -10,7 +10,6 @@ import (
 	"time"
 	"strconv"
 	"regexp"
-	"fmt"
 )
 
 type Task struct {
@@ -59,6 +58,7 @@ func addMap(c *Coordinator, reply *CoordinatorReply) {
 			reply.TaskType = 1
 			reply.NReduce = c.NReduce
 			reply.TaskId = c.MapIdx
+			reply.FileName=fileName
 
 			mapTask := &Task{time.Now(), fileName, c.MapIdx,-1}
 			c.MapTask = append(c.MapTask, mapTask)
@@ -75,9 +75,11 @@ func addMap(c *Coordinator, reply *CoordinatorReply) {
 // the RPC argument and reply types are defined in rpc.go.
 //
 func (c *Coordinator) GetReq(args *WorkerAsk, reply *CoordinatorReply) error {
+	c.Mutex.Lock()
+	defer c.Mutex.Unlock()
 	if args.Status == 0 {
 		//请求获取任务,当map的任务完成时，分配reduce任务
-		if c.MapFinish != len(c.MapFiles) {
+		if c.MapFinish < len(c.MapFiles) {
 			addMap(c, reply)
 		} else {
 			addReduce(c, reply)
@@ -90,16 +92,16 @@ func (c *Coordinator) GetReq(args *WorkerAsk, reply *CoordinatorReply) error {
 				if value.TaskId == args.TaskId {
 					c.MapTask = append(c.MapTask[:key], c.MapTask[key+1:]...)
 					c.MapFiles[args.FileName] = 1
-					c.MapFinish++
 					//将临时文件重命名
 					tmpFileName :="mr-"+strconv.Itoa(args.TaskId)+"-*"
 					tmpLists:=GetFilesFromDir(tmpFileName)
 					for _,oldName := range tmpLists{
 						regexStr:=regexp.MustCompile("mr-[0-9]*-[0-9]*")
 						newName:=regexStr.FindStringSubmatch(oldName)
-						fmt.Println("map oldName=",oldName," newName=",newName)
+						// fmt.Println("map oldName=",oldName," newName=",newName)
 						os.Rename(oldName,newName[len(newName)-1])
 					}
+					c.MapFinish++
 					break
 				}
 			}
@@ -118,7 +120,7 @@ func (c *Coordinator) GetReq(args *WorkerAsk, reply *CoordinatorReply) error {
 				for _,oldName := range tmpLists{
 					regexStr:=regexp.MustCompile("mr-out-[0-9]*")
 					newName:=regexStr.FindStringSubmatch(oldName)
-					fmt.Println("reduce oldName=",oldName," newName=",newName)
+					// fmt.Println("reduce oldName=",oldName," newName=",newName)
 					os.Rename(oldName,newName[len(newName)-1])
 				}
 				break
@@ -151,6 +153,8 @@ func (c *Coordinator) server() {
 // if the entire job has finished.
 //
 func (c *Coordinator) Done() bool {
+	c.Mutex.Lock()
+	defer c.Mutex.Unlock()
 	if c.ReduceFinish == c.NReduce {
 		return true
 	}
@@ -160,6 +164,8 @@ func (c *Coordinator) Done() bool {
 func (c *Coordinator) DetectorCrash(){
 	idx:=0
 	for{
+		c.Mutex.Lock()
+		defer c.Mutex.Unlock()
 		if idx>=len(c.MapTask){
 			break;
 		}
