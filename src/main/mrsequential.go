@@ -6,13 +6,16 @@ package main
 // go run mrsequential.go wc.so pg*.txt
 //
 
-import "fmt"
-import "6.824/mr"
-import "plugin"
-import "os"
-import "log"
-import "io/ioutil"
-import "sort"
+import (
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"plugin"
+	"sort"
+
+	"6.824/mr"
+)
 
 // for sorting by key.
 type ByKey []mr.KeyValue
@@ -38,6 +41,7 @@ func main() {
 	intermediate := []mr.KeyValue{}
 	for _, filename := range os.Args[2:] {
 		file, err := os.Open(filename)
+		// fmt.Println(filename)
 		if err != nil {
 			log.Fatalf("cannot open %v", filename)
 		}
