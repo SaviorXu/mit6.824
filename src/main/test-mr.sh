@@ -79,7 +79,6 @@ sort mr-out-0 > mr-correct-indexer.txt
 rm -f mr-out*
 
 echo '***' Starting indexer test.
-pwd
 timeout -k 2s 180s ../mrcoordinator ../pg*txt &
 sleep 1
 
