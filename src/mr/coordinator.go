@@ -10,6 +10,8 @@ import (
 	"time"
 	"strconv"
 	"regexp"
+	"io/ioutil"
+	"fmt"
 )
 
 type Task struct {
@@ -93,13 +95,18 @@ func (c *Coordinator) GetReq(args *WorkerAsk, reply *CoordinatorReply) error {
 					c.MapTask = append(c.MapTask[:key], c.MapTask[key+1:]...)
 					c.MapFiles[args.FileName] = 1
 					//将临时文件重命名
-					tmpFileName :="mr-"+strconv.Itoa(args.TaskId)+"-*"
-					tmpLists:=GetFilesFromDir(tmpFileName)
-					for _,oldName := range tmpLists{
-						regexStr:=regexp.MustCompile("mr-[0-9]*-[0-9]*")
-						newName:=regexStr.FindStringSubmatch(oldName)
-						// fmt.Println("map oldName=",oldName," newName=",newName)
-						os.Rename(oldName,newName[len(newName)-1])
+					pattern :="mr-"+strconv.Itoa(args.TaskId)+"-[0-9]*"
+					dir,err:=ioutil.ReadDir(".")
+					if err!=nil{
+						fmt.Println("GetReq:ReadDir fail")
+					}
+					for _,oldName:=range dir{
+						match,_:=regexp.MatchString(pattern,oldName.Name())
+						if match ==true{
+							regexStr:=regexp.MustCompile("mr-[0-9]*-[0-9]*")
+							newName:=regexStr.FindStringSubmatch(oldName.Name())
+							os.Rename(oldName.Name(),newName[len(newName)-1])
+						}
 					}
 					c.MapFinish++
 					break
@@ -170,6 +177,7 @@ func (c *Coordinator) DetectorCrash(){
 			break;
 		}
 		if time.Since(c.MapTask[idx].BeginTime)>time.Duration(10)*time.Second{
+			fmt.Println("Map timeout")
 			c.MapTask=append(c.MapTask[:idx],c.MapTask[idx+1:]...)
 			c.MapFiles[c.MapTask[idx].FileName]=-1
 		}else{
@@ -182,6 +190,7 @@ func (c *Coordinator) DetectorCrash(){
 			break;
 		}
 		if time.Since(c.ReduceTask[idx].BeginTime)>time.Duration(10)*time.Second{
+			fmt.Println("Reduce timeout")
 			c.ReduceTask=append(c.ReduceTask[:idx],c.ReduceTask[idx+1:]...)
 			c.ReduceFiles[c.ReduceTask[idx].ReduceId]=-1
 		}else{

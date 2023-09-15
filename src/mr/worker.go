@@ -10,6 +10,7 @@ import (
 	"os"
 	"strconv"
 	"sort"
+	"regexp"
 )
 
 //
@@ -88,8 +89,19 @@ func RunMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
 func RunReduce(arg *CoordinatorReply, reducef func(string, []string) string) bool {
 	//先获取该目录下的所有指定的文件，接着使用reducef
 	// fmt.Println("RunReduce")
-	fileNames:="mr-"+"*"+"-"+strconv.Itoa(arg.ReduceId)
-	fileList := GetFilesFromDir(fileNames)
+	dir,err:=ioutil.ReadDir(".")
+	if err!=nil{
+		fmt.Println("RunReduce:ReadDir error")
+		return false
+	}
+	var fileList []string
+	pattern := "mr-"+"[0-9]*"+"-"+strconv.Itoa(arg.ReduceId)
+	for _,dirFiles:=range dir{
+		match,_:=regexp.MatchString(pattern,dirFiles.Name())
+		if match ==true{
+			fileList=append(fileList,dirFiles.Name())
+		}
+	}
 	var kva []KeyValue
 	for _,fileName := range fileList{
 		file,err :=os.Open(fileName)
