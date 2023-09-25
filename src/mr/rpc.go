@@ -28,7 +28,7 @@ type WorkerAsk struct {
 }
 
 type CoordinatorReply struct {
-	TaskType int //1表示map任务，2表示reduce任务,0表示无任务
+	TaskType int //1表示map任务，2表示reduce任务,0表示无任务,3表示任务结束
 	NReduce  int
 	FileName string
 	TaskId   int//任务序号

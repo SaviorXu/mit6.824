@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"sort"
 	"regexp"
+	"path/filepath"
 )
 
 //
@@ -36,7 +37,7 @@ func ihash(key string) int {
 	return int(h.Sum32() & 0x7fffffff)
 }
 
-func RunMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
+func RunMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue){
 	// fmt.Println("RunMap")
 	fileName := arg.FileName
 	file, err := os.Open(fileName)
@@ -44,13 +45,13 @@ func RunMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
 	if err != nil {
 		// fmt.Printf("filename=%s",fileName)
 		log.Fatalf("RunMap:cannot open %v", fileName)
-		return false
+		return
 	}
 	content, err := ioutil.ReadAll(file)
 	// fmt.Println("ioutil.ReadAll")
 	if err != nil {
 		log.Fatalf("cannot read %v", fileName)
-		return false
+		return
 	}
 	file.Close()
 	kva := mapf(fileName, string(content))
@@ -61,8 +62,8 @@ func RunMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
 		filePrefix:="mr-"+strconv.Itoa(arg.TaskId)+"-"+strconv.Itoa(idx)+"-"
 		tmpFile,err2:=ioutil.TempFile(".",filePrefix)
 		if err2!=nil{
-			fmt.Println("create temp_file error")
-			return false
+			fmt.Println("create temp_file error",err2)
+			return
 		}
 		tmpMap[idx]=tmpFile
 	}
@@ -74,8 +75,8 @@ func RunMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
 		encoder := json.NewEncoder(tmpMap[idx])
 		err = encoder.Encode(&value)
 		if err != nil {
-			fmt.Println("Encode error")
-			return false
+			fmt.Println("Encode error",err)
+			return
 		}
 	}
 
@@ -83,22 +84,27 @@ func RunMap(arg *CoordinatorReply, mapf func(string, string) []KeyValue) bool {
 		 value.Close()
 	}
 	// fmt.Println("map finish")
-	return true
+
+	finishReq := WorkerAsk{1, arg.FileName, arg.TaskId}
+	invalidReply := CoordinatorReply{}
+	call("Coordinator.GetReq", &finishReq, &invalidReply)
 }
 
-func RunReduce(arg *CoordinatorReply, reducef func(string, []string) string) bool {
+func RunReduce(arg *CoordinatorReply, reducef func(string, []string) string) {
 	//先获取该目录下的所有指定的文件，接着使用reducef
-	// fmt.Println("RunReduce")
+	// fmt.Println("worker.go:RunReduce")
 	dir,err:=ioutil.ReadDir(".")
 	if err!=nil{
-		fmt.Println("RunReduce:ReadDir error")
-		return false
+		fmt.Println("RunReduce:ReadDir error",err)
+		return 
 	}
 	var fileList []string
-	pattern := "mr-"+"[0-9]*"+"-"+strconv.Itoa(arg.ReduceId)
+	// fmt.Println("worker.go:arg.ReduceId",strconv.Itoa(arg.ReduceId))
+	pattern := "mr-"+"[0-9]*"+"-"+strconv.Itoa(arg.ReduceId)+"$"
 	for _,dirFiles:=range dir{
 		match,_:=regexp.MatchString(pattern,dirFiles.Name())
 		if match ==true{
+			// fmt.Println("worker.go:match",strconv.Itoa(arg.ReduceId))
 			fileList=append(fileList,dirFiles.Name())
 		}
 	}
@@ -107,25 +113,26 @@ func RunReduce(arg *CoordinatorReply, reducef func(string, []string) string) boo
 		file,err :=os.Open(fileName)
 		if err!=nil{
 			fmt.Println("RunReduce open error",fileName)
-			break
+			return 
 		}
 		dec := json.NewDecoder(file)
 		for{
 			var kv KeyValue
-			if err=dec.Decode(&kv);err!=nil{
-				// fmt.Println("decode error",fileName)
+			if err :=dec.Decode(&kv);err!=nil{
+				// fmt.Println("decode error",fileName,err)
 				break
 			}
 			kva=append(kva,kv)
 		}
 	}
+	// fmt.Println("arg.ReduceId:",arg.ReduceId," len(kva)=",len(kva))
 	sort.Sort(ByKey(kva))
 	//将文件写到中间文件
 	filePrefix:="mr-out-"+strconv.Itoa(arg.ReduceId)+"-"
 	tmpFile,err:=ioutil.TempFile(".",filePrefix)
 	if err!=nil{
 		fmt.Println("reduce create tmp_file error")
-		return false
+		return 
 	}
 
 	i:=0
@@ -143,7 +150,12 @@ func RunReduce(arg *CoordinatorReply, reducef func(string, []string) string) boo
 		i=j
 	}
 	tmpFile.Close()
-	return true
+	_,postfix:=filepath.Split(tmpFile.Name())
+	// fmt.Println("worker.go:RunReduce finish",strconv.Itoa(arg.ReduceId)," len(kva)=",len(kva)," arg.TaskId=",arg.TaskId," tmpFile=",postfix)
+	
+	finishReq := WorkerAsk{2,postfix,arg.TaskId}
+	invalidReply:=CoordinatorReply{}
+	call("Coordinator.GetReq", &finishReq, &invalidReply)
 }
 
 //
@@ -158,24 +170,14 @@ func Worker(mapf func(string, string) []KeyValue,
 		args.Status = 0
 		reply := CoordinatorReply{}
 		if call("Coordinator.GetReq", &args, &reply) {
-			if reply.TaskType == 1 {
-				if RunMap(&reply, mapf) == true {
-					//向coordinator告知map结束
-					finishReq := WorkerAsk{1, reply.FileName, reply.TaskId}
-					invalidReply := CoordinatorReply{}
-					call("Coordinator.GetReq", &finishReq, &invalidReply)
-				}
-
-			} else if reply.TaskType == 2 {
-				if RunReduce(&reply,reducef)==true{
-					finishReq := WorkerAsk{2,"",reply.TaskId}
-					invalidReply:=CoordinatorReply{}
-					call("Coordinator.GetReq", &finishReq, &invalidReply)
-				}
-			}else if reply.TaskType==1{
-				continue
-			}else{
+			if reply.TaskType==3{
 				break
+			}else if reply.TaskType == 1 {
+				RunMap(&reply, mapf)
+			} else if reply.TaskType == 2 {
+				RunReduce(&reply,reducef)
+			}else if reply.TaskType==0{
+				continue
 			}
 		}
 	}

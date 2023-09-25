@@ -33,6 +33,7 @@ type Coordinator struct {
 	ReduceIdx    int //reduce任务序号
 	MapFinish    int //map任务完成数目
 	ReduceFinish int //reduce任务完成数目
+	Finish bool
 }
 
 // Your code here -- RPC handlers for the worker to call.
@@ -42,11 +43,13 @@ type Coordinator struct {
 func addReduce(c *Coordinator, reply *CoordinatorReply) {
 	for i:=0;i<c.NReduce;i++{
 		if c.ReduceFiles[i]==-1{
+			// fmt.Println("addReduce")
 			reply.TaskType=2
 			reply.TaskId=c.ReduceIdx
 			reply.NReduce=c.NReduce	
 			reply.ReduceId=i
 			reduceTask:= &Task{time.Now(),"",c.ReduceIdx,i}
+			c.ReduceFiles[i]=0
 			c.ReduceTask=append(c.ReduceTask,reduceTask)
 			c.ReduceIdx++
 			break
@@ -92,8 +95,13 @@ func (c *Coordinator) GetReq(args *WorkerAsk, reply *CoordinatorReply) error {
 			//从map的任务队列中删除该任务
 			for key, value := range c.MapTask {
 				if value.TaskId == args.TaskId {
-					c.MapTask = append(c.MapTask[:key], c.MapTask[key+1:]...)
-					c.MapFiles[args.FileName] = 1
+					if(len(c.MapTask)>1){
+						c.MapTask = append(c.MapTask[:key], c.MapTask[key+1:]...)
+					}else{
+						c.MapTask=[]*Task{}
+					}
+					
+					
 					//将临时文件重命名
 					pattern :="mr-"+strconv.Itoa(args.TaskId)+"-[0-9]*"
 					dir,err:=ioutil.ReadDir(".")
@@ -108,34 +116,44 @@ func (c *Coordinator) GetReq(args *WorkerAsk, reply *CoordinatorReply) error {
 							os.Rename(oldName.Name(),newName[len(newName)-1])
 						}
 					}
-					c.MapFinish++
+					if(c.MapFiles[args.FileName]==0){
+						c.MapFiles[args.FileName]=1
+						c.MapFinish++
+					}
 					break
 				}
 			}
 		}
-		reply.TaskType = 0
+		reply.TaskType=0;
 	} else if args.Status == 2 {
 		//reduce任务完成
 		for key, value := range c.ReduceTask {
 			if value.TaskId == args.TaskId {
-				c.ReduceTask = append(c.ReduceTask[:key], c.ReduceTask[key+1:]...)
-				c.ReduceFinish++
-				c.ReduceFiles[value.ReduceId]=1
+				// fmt.Println("Reduce finish",args.TaskId)
+				if(len(c.ReduceTask)>1){
+					c.ReduceTask = append(c.ReduceTask[:key], c.ReduceTask[key+1:]...)
+				}else{
+					c.ReduceTask=[]*Task{}
+				}
+				
 				//将临时文件重命名
-				tmpFileName :="mr-out-"+strconv.Itoa(value.ReduceId)+"-*"
-				tmpLists:=GetFilesFromDir(tmpFileName)
-				for _,oldName := range tmpLists{
-					regexStr:=regexp.MustCompile("mr-out-[0-9]*")
-					newName:=regexStr.FindStringSubmatch(oldName)
-					// fmt.Println("reduce oldName=",oldName," newName=",newName)
-					os.Rename(oldName,newName[len(newName)-1])
+				regexStr:=regexp.MustCompile("mr-out-[0-9]*")
+				newName:=regexStr.FindStringSubmatch(args.FileName)
+				os.Rename(args.FileName,newName[len(newName)-1])
+				if(c.ReduceFiles[value.ReduceId]==0){
+					//可能会出现一个reduce任务超时，之后又有一个reduce任务执行同样的文件。当done在等待时，超时的reduce任务又完成了。此时会出现重复的行
+					c.ReduceFinish++
+					c.ReduceFiles[value.ReduceId]=1
 				}
 				break
 			}
 		}
-		reply.TaskType = 0
+		if( c.Finish==true || c.NReduce==c.ReduceFinish){
+			reply.TaskType=3
+		}else{
+			reply.TaskType=0
+		}
 	}
-
 	return nil
 }
 
@@ -162,39 +180,78 @@ func (c *Coordinator) server() {
 func (c *Coordinator) Done() bool {
 	c.Mutex.Lock()
 	defer c.Mutex.Unlock()
-	if c.ReduceFinish == c.NReduce {
-		return true
+	if c.ReduceFinish==c.NReduce{
+		c.Finish=true
+		// fmt.Println("coordinator finish")
 	}
-	return false
+	time.Sleep(200*time.Millisecond)
+	if c.Finish==true{
+		dir,err:=ioutil.ReadDir(".")
+		if err!=nil{
+			fmt.Println("Done error",err)
+		}
+		var fileList []string
+		pattern:="mr-out-[0-9]*-[0-9]*"
+		for _,dirFiles:=range dir{
+			match,_:=regexp.MatchString(pattern,dirFiles.Name())
+			if match==true{
+				fileList=append(fileList,dirFiles.Name())
+			}
+		}
+		for _,fileName:=range fileList{
+			err:=os.Remove(fileName)
+			if err!=nil{
+				fmt.Println("remove err",err)
+			}
+		}
+	}
+	return c.Finish
 }
 
 func (c *Coordinator) DetectorCrash(){
-	idx:=0
 	for{
-		c.Mutex.Lock()
-		defer c.Mutex.Unlock()
-		if idx>=len(c.MapTask){
-			break;
+		idx:=0
+		for{
+			c.Mutex.Lock()
+			// println("DetectorCrash",len(c.MapTask))
+			if idx>=len(c.MapTask){
+				c.Mutex.Unlock()
+				break;
+			}
+			// println(time.Since(c.MapTask[idx].BeginTime))
+			if time.Since(c.MapTask[idx].BeginTime)>time.Duration(10)*time.Second{
+				// fmt.Println("Map timeout,len=",len(c.MapTask))
+				c.MapFiles[c.MapTask[idx].FileName]=-1
+				if(len(c.MapTask)>1){
+					c.MapTask=append(c.MapTask[:idx],c.MapTask[idx+1:]...)
+				}else{
+					c.MapTask=[]*Task{}
+				}
+				// fmt.Println("Map timeout finish")
+			}else{
+				idx++
+			}
+			c.Mutex.Unlock()
 		}
-		if time.Since(c.MapTask[idx].BeginTime)>time.Duration(10)*time.Second{
-			fmt.Println("Map timeout")
-			c.MapTask=append(c.MapTask[:idx],c.MapTask[idx+1:]...)
-			c.MapFiles[c.MapTask[idx].FileName]=-1
-		}else{
-			idx++
-		}
-	}
-	idx=0
-	for{
-		if idx>=len(c.ReduceTask){
-			break;
-		}
-		if time.Since(c.ReduceTask[idx].BeginTime)>time.Duration(10)*time.Second{
-			fmt.Println("Reduce timeout")
-			c.ReduceTask=append(c.ReduceTask[:idx],c.ReduceTask[idx+1:]...)
-			c.ReduceFiles[c.ReduceTask[idx].ReduceId]=-1
-		}else{
-			idx++
+		idx=0
+		for{
+			c.Mutex.Lock()
+			if idx>=len(c.ReduceTask){
+				c.Mutex.Unlock()
+				break;
+			}
+			if time.Since(c.ReduceTask[idx].BeginTime)>time.Duration(10)*time.Second{
+				// fmt.Println("Reduce timeout",c.ReduceTask[idx].ReduceId)
+				c.ReduceFiles[c.ReduceTask[idx].ReduceId]=-1
+				if(len(c.ReduceTask)>1){
+					c.ReduceTask=append(c.ReduceTask[:idx],c.ReduceTask[idx+1:]...)
+				}else{
+					c.ReduceTask=[]*Task{}
+				}
+			}else{
+				idx++
+			}
+			c.Mutex.Unlock()
 		}
 	}
 }
