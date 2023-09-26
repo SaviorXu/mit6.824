@@ -1,11 +1,10 @@
 ==========   1   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
@@ -13,26 +12,28 @@ unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   2   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
@@ -44,22 +45,20 @@ unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   3   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
@@ -68,35 +67,36 @@ unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   4   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
@@ -104,28 +104,25 @@ unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   5   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
@@ -134,73 +131,62 @@ unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   6   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   7   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   8   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
@@ -210,14 +196,11 @@ unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
@@ -225,45 +208,43 @@ unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   9   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   10   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
@@ -271,34 +252,29 @@ unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   11   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
@@ -310,13 +286,13 @@ unexpected EOF
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   12   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
@@ -324,57 +300,51 @@ unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   13   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-mr-crash-all mr-correct-crash.txt differ: char 170, line 1
---- crash output is not the same as mr-correct-crash.txt
---- crash test: FAIL
-*** FAILED SOME TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+--- crash test: PASS
+*** PASSED ALL TESTS
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   14   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
@@ -393,44 +363,41 @@ unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   15   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   16   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 --- wc test: PASS
 *** Starting indexer test.
@@ -438,17 +405,14 @@ unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
@@ -457,53 +421,45 @@ unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   17   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   18   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
@@ -512,46 +468,42 @@ unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   19   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   20   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
@@ -566,9 +518,9 @@ unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   21   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
@@ -576,15 +528,14 @@ unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
@@ -593,16 +544,14 @@ unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   22   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
@@ -610,10 +559,8 @@ unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
@@ -621,12 +568,17 @@ unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
+unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   23   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
@@ -634,9 +586,10 @@ unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
@@ -644,51 +597,50 @@ unexpected EOF
 *** Starting early exit test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   24   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   25   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
@@ -697,6 +649,7 @@ unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
@@ -704,25 +657,21 @@ unexpected EOF
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   26   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
@@ -732,30 +681,26 @@ unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   27   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
@@ -763,48 +708,42 @@ unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   28   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   29   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
@@ -816,16 +755,17 @@ unexpected EOF
 *** Starting early exit test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   30   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
@@ -833,11 +773,14 @@ unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
@@ -846,73 +789,65 @@ unexpected EOF
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   31   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   32   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   33   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
+unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
@@ -920,12 +855,10 @@ unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- early exit test: PASS
@@ -935,9 +868,9 @@ unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   34   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
@@ -945,85 +878,77 @@ unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   35   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   36   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   37   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
@@ -1033,14 +958,11 @@ unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
@@ -1053,9 +975,9 @@ unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   38   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
@@ -1065,16 +987,14 @@ unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
 unexpected EOF
 unexpected EOF
 --- early exit test: PASS
@@ -1083,68 +1003,72 @@ unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   39   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   40   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   41   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
@@ -1158,62 +1082,61 @@ unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   42   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   43   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   44   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
@@ -1225,7 +1148,6 @@ unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
@@ -1239,13 +1161,15 @@ unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   45   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
@@ -1255,22 +1179,19 @@ unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   46   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
@@ -1282,33 +1203,33 @@ unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   47   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
@@ -1316,28 +1237,24 @@ unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   48   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
@@ -1351,11 +1268,10 @@ unexpected EOF
 *** Starting crash test.
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   49   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
@@ -1368,20 +1284,23 @@ unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   50   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
@@ -1394,7 +1313,6 @@ unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
@@ -1402,95 +1320,89 @@ unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   51   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   52   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
+unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   53   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   54   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
@@ -1498,13 +1410,12 @@ unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
@@ -1518,19 +1429,16 @@ unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   55   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
@@ -1541,16 +1449,16 @@ unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   56   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
@@ -1561,32 +1469,30 @@ unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   57   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
@@ -1601,45 +1507,41 @@ unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   58   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   59   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
@@ -1647,22 +1549,22 @@ unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   60   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
@@ -1670,36 +1572,36 @@ unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   61   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
@@ -1708,27 +1610,30 @@ unexpected EOF
 *** Starting early exit test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   62   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
@@ -1736,15 +1641,20 @@ unexpected EOF
 *** Starting early exit test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   63   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
@@ -1753,11 +1663,14 @@ unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
@@ -1766,11 +1679,12 @@ unexpected EOF
 unexpected EOF
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   64   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 --- wc test: PASS
@@ -1778,9 +1692,10 @@ unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
@@ -1789,16 +1704,17 @@ unexpected EOF
 *** Starting early exit test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   65   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
@@ -1807,81 +1723,76 @@ unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   66   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   67   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
+unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   68   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
@@ -1892,24 +1803,30 @@ unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   69   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
@@ -1917,12 +1834,13 @@ unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
@@ -1930,16 +1848,12 @@ unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   70   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
@@ -1954,30 +1868,31 @@ unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   71   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
@@ -1988,23 +1903,23 @@ unexpected EOF
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   72   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
@@ -2016,12 +1931,15 @@ unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   73   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
@@ -2029,10 +1947,8 @@ unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
@@ -2040,17 +1956,17 @@ unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   74   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
@@ -2060,51 +1976,55 @@ unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   75   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
 unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   76   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
@@ -2115,61 +2035,61 @@ unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   77   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   78   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
@@ -2183,12 +2103,11 @@ unexpected EOF
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   79   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
@@ -2203,19 +2122,18 @@ unexpected EOF
 *** Starting reduce parallelism test.
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   80   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
@@ -2228,12 +2146,16 @@ unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
@@ -2241,34 +2163,40 @@ unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   81   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   82   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 --- indexer test: PASS
@@ -2276,37 +2204,40 @@ unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   83   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
+unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
@@ -2314,47 +2245,37 @@ unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   84   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   85   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
@@ -2364,9 +2285,9 @@ unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
@@ -2374,13 +2295,18 @@ unexpected EOF
 *** Starting early exit test.
 unexpected EOF
 unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   86   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
@@ -2390,57 +2316,45 @@ unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   87   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   88   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
@@ -2448,10 +2362,8 @@ unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
@@ -2462,45 +2374,40 @@ unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   89   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   90   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
@@ -2510,167 +2417,157 @@ unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   91   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   92   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
 unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
-unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   93   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
+unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   94   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
+unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   95   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
+unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
-unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
 unexpected EOF
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   96   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 --- indexer test: PASS
 *** Starting map parallelism test.
+unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
@@ -2680,47 +2577,42 @@ unexpected EOF
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
+unexpected EOF
+unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   97   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
-unexpected EOF
-unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 --- indexer test: PASS
 *** Starting map parallelism test.
 unexpected EOF
-unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
-unexpected EOF
-unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
 unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   98   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 unexpected EOF
 --- wc test: PASS
@@ -2739,24 +2631,23 @@ unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
-unexpected EOF
-unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
 unexpected EOF
+unexpected EOF
+unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   99   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
-unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
@@ -2764,26 +2655,25 @@ unexpected EOF
 --- reduce parallelism test: PASS
 *** Starting job count test.
 unexpected EOF
+unexpected EOF
 --- job count test: PASS
 *** Starting early exit test.
 unexpected EOF
 --- early exit test: PASS
 *** Starting crash test.
-unexpected EOF
-unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 ==========   100   =======
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
 *** Starting wc test.
+unexpected EOF
 unexpected EOF
 --- wc test: PASS
 *** Starting indexer test.
 unexpected EOF
 --- indexer test: PASS
 *** Starting map parallelism test.
-unexpected EOF
 unexpected EOF
 --- map parallelism test: PASS
 *** Starting reduce parallelism test.
@@ -2801,4 +2691,4 @@ unexpected EOF
 unexpected EOF
 --- crash test: PASS
 *** PASSED ALL TESTS
-/Users/savior/mit6.824/src/main/mr-tmp
+/Users/xuqianhui/mit6.824/src/main/mr-tmp
