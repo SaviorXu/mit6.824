@@ -19,8 +19,10 @@ package raft
 
 import (
 	//	"bytes"
+	"math/rand"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	//	"6.824/labgob"
 	"6.824/labrpc"
@@ -69,8 +71,11 @@ type Raft struct {
 	// Look at the paper's Figure 2 for a description of what
 	// state a Raft server must maintain.
 	currentTerm int
-	votedFor    int //值为-1时，表示还未投票
+	votedFor    int //值为0时，表示还未投票。值为1时，表示已投票
 	log         []LogEntry
+	//心跳
+	heartBeatTime time.Time
+	state         int //0:follower 1:candidate 2:leader
 }
 
 // return currentTerm and whether this server
@@ -80,6 +85,11 @@ func (rf *Raft) GetState() (int, bool) {
 	var term int
 	var isleader bool
 	// Your code here (2A).
+	term = rf.currentTerm
+	isleader = false
+	if rf.state == 2 {
+		isleader = true
+	}
 	return term, isleader
 }
 
@@ -144,7 +154,7 @@ func (rf *Raft) Snapshot(index int, snapshot []byte) {
 //
 // example RequestVote RPC arguments structure.
 // field names must start with capital letters!
-//
+//follower变成candidate，发起投票
 type RequestVoteArgs struct {
 	// Your data here (2A, 2B).
 	Term         int //任期号
@@ -156,14 +166,14 @@ type RequestVoteArgs struct {
 //
 // example RequestVote RPC reply structure.
 // field names must start with capital letters!
-//
+//follower回复candidate。回复投票结果
 type RequestVoteReply struct {
 	// Your data here (2A).
 	Term        int  //任期号
 	VoteGranted bool //是否投票
 }
 
-type AppendEntries struct {
+type AppendEntriesArgs struct {
 	Term         int
 	LeaderId     int
 	PrevLogIndex int
@@ -179,9 +189,26 @@ type AppendEntriesReply struct {
 
 //
 // example RequestVote RPC handler.
-//候选者发起，收集跟随者的投票
+//跟随者根据args决定是否投票给该候选者。
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// Your code here (2A, 2B).
+	if args.Term < rf.currentTerm || rf.votedFor == 1 {
+		reply.VoteGranted = false
+		return
+	} else {
+		lastIdx := len(rf.log) - 1
+		if args.LastLogTerm < rf.log[lastIdx].Term || (args.LastLogTerm == rf.log[lastIdx].Term && args.LastLogIndex < rf.log[lastIdx].Index) {
+			reply.VoteGranted = false
+			return
+		} else {
+			reply.Term = rf.currentTerm
+			reply.VoteGranted = true
+			rf.votedFor = 1
+		}
+	}
+}
+
+func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
 
 }
 
@@ -213,7 +240,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 // capitalized all field names in structs passed over RPC, and
 // that the caller passes the address of the reply struct with &, not
 // the struct itself.
-//
+//领导者向所有的跟随者发起投票。
 func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply) bool {
 	ok := rf.peers[server].Call("Raft.RequestVote", args, reply)
 	return ok
@@ -266,9 +293,36 @@ func (rf *Raft) killed() bool {
 
 // The ticker go routine starts a new election if this peer hasn't received
 // heartsbeats recently.
+//？？?leader在超时选举时间内没有收到任何响应，如何处理
+//选举超时时间：一个随机数在150-300ms。当follower在选举超时时间内没有收到leader的响应，则申请当leader，状态变为candidate。
 func (rf *Raft) ticker() {
+	rand.Seed(time.Now().UnixNano())
 	for rf.killed() == false {
-
+		elecTimeOut := rand.Intn(151) + 150
+		time.Sleep(time.Millisecond * time.Duration(rand.Intn(151)+150))
+		if time.Duration(time.Since(rf.heartBeatTime).Milliseconds()) > time.Millisecond*time.Duration(elecTimeOut) {
+			rf.state = 1
+			rf.votedFor = 1
+			voteSum := 1
+			var reqVoteArgs RequestVoteArgs
+			reqVoteArgs.Term = rf.currentTerm + 1
+			reqVoteArgs.CandidateId = rf.me
+			reqVoteArgs.LastLogIndex = rf.log[len(rf.log)-1].Index
+			reqVoteArgs.LastLogTerm = rf.log[len(rf.log)-1].Term
+			for i := 0; i < len(rf.peers); i++ {
+				if i != rf.me {
+					var reqVoteReply RequestVoteReply
+					rf.sendRequestVote(i, &reqVoteArgs, &reqVoteReply)
+					//候选者查看票数是否达到了一半以上。若达到则成为leader
+					if reqVoteReply.VoteGranted == true {
+						voteSum++
+					}
+				}
+			}
+			if voteSum > len(rf.peers)/2 {
+				rf.state = 2
+			}
+		}
 		// Your code here to check if a leader election should
 		// be started and to randomize sleeping time using
 		// time.Sleep().
@@ -295,7 +349,10 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	// Your initialization code here (2A, 2B, 2C).
 	rf.currentTerm = 0
-	rf.votedFor = -1
+	rf.votedFor = 0
+
+	rf.heartBeatTime = time.Now()
+	rf.state = 0
 
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())
