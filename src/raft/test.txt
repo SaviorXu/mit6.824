@@ -1,0 +1,118 @@
+Raft start...
+Raft start...
+Raft start...
+Test (2A): initial election ...
+heartBeatTimer timeout
+heartBeatTimer timeout
+heartBeatTimer timeout
+electionTimer timeout
+0  Vote
+2  Vote
+labgob warning: Decoding into a non-default variable/field Term may not work
+1  become leader
+electionTimer timeout
+1  Vote
+2  Vote
+0  become leader
+electionTimer timeout
+0  Vote
+1  Vote
+2  become leader
+  ... Passed --   3.1  3    6     980    0
+Raft start...
+Raft start...
+Raft start...
+Test (2A): election after network failure ...
+heartBeatTimer timeout
+heartBeatTimer timeout
+heartBeatTimer timeout
+electionTimer timeout
+1  Vote
+2  Vote
+0  become leader
+electionTimer timeout
+0  Vote
+2  Vote
+1  become leader
+electionTimer timeout
+0  Vote
+1  Vote
+2  become leader
+--- FAIL: TestReElection2A (5.43s)
+    config.go:400: expected one leader, got none
+Raft start...
+Raft start...
+Raft start...
+Raft start...
+Raft start...
+Raft start...
+Raft start...
+heartBeatTimer timeout
+Test (2A): multiple elections ...
+heartBeatTimer timeout
+heartBeatTimer timeout
+heartBeatTimer timeout
+heartBeatTimer timeout
+heartBeatTimer timeout
+heartBeatTimer timeout
+electionTimer timeout
+0  Vote
+1  Vote
+3  Vote
+4  Vote
+5  Vote
+6  Vote
+2  become leader
+electionTimer timeout
+0  Vote
+2  Vote
+3  Vote
+4  Vote
+5  Vote
+6  Vote
+1  become leader
+electionTimer timeout
+0  Vote
+1  Vote
+2  Vote
+3  Vote
+5  Vote
+6  Vote
+4  become leader
+electionTimer timeout
+0  Vote
+1  Vote
+2  Vote
+3  Vote
+4  Vote
+5  Vote
+6  become leader
+electionTimer timeout
+0  Vote
+1  Vote
+2  Vote
+4  Vote
+5  Vote
+6  Vote
+3  become leader
+electionTimer timeout
+0  Vote
+1  Vote
+2  Vote
+3  Vote
+4  Vote
+6  Vote
+5  become leader
+electionTimer timeout
+1  Vote
+2  Vote
+3  Vote
+4  Vote
+5  Vote
+6  Vote
+0  become leader
+--- FAIL: TestManyElections2A (6.02s)
+    config.go:400: expected one leader, got none
+FAIL
+exit status 1
+FAIL	6.824/raft	14.567s

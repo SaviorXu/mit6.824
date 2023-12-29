@@ -19,12 +19,15 @@ package raft
 
 import (
 	//	"bytes"
+	"bytes"
+	"fmt"
 	"math/rand"
 	"sync"
 	"sync/atomic"
 	"time"
 
 	//	"6.824/labgob"
+	"6.824/labgob"
 	"6.824/labrpc"
 )
 
@@ -53,9 +56,16 @@ type ApplyMsg struct {
 
 type LogEntry struct {
 	Index   int
-	Term    int
+	Term    int //日志条目首次被领导者创建时的任期
 	Command interface{}
 }
+
+const (
+	stateFollower  = 0
+	stateCandidate = 1
+	stateLeader    = 2
+)
+const serverSum int = 100
 
 //
 // A Go object implementing a single Raft peer.
@@ -70,85 +80,20 @@ type Raft struct {
 	// Your data here (2A, 2B, 2C).
 	// Look at the paper's Figure 2 for a description of what
 	// state a Raft server must maintain.
-	currentTerm int
+	currentTerm int //服务器当前已知的最新任期号，必须持久化存储。
 	votedFor    int //值为0时，表示还未投票。值为1时，表示已投票
-	log         []LogEntry
-	//心跳
-	heartBeatTime time.Time
-	state         int //0:follower 1:candidate 2:leader
-}
+	//表示当前任期内选票投给了哪个候选者，持久化存储
+	log []LogEntry //日志，持久化存储。一个日志被存储在超过半数的节点上，则认为该记录已提交，状态机可以安全地执行该记录。
+	//
+	heartBeatTimer *time.Timer
+	electionTimer  *time.Timer
+	state          int //0:follower 1:candidate 2:leader
 
-// return currentTerm and whether this server
-// believes it is the leader.
-func (rf *Raft) GetState() (int, bool) {
-
-	var term int
-	var isleader bool
-	// Your code here (2A).
-	term = rf.currentTerm
-	isleader = false
-	if rf.state == 2 {
-		isleader = true
-	}
-	return term, isleader
-}
-
-//
-// save Raft's persistent state to stable storage,
-// where it can later be retrieved after a crash and restart.
-// see paper's Figure 2 for a description of what should be persistent.
-//
-func (rf *Raft) persist() {
-	// Your code here (2C).
-	// Example:
-	// w := new(bytes.Buffer)
-	// e := labgob.NewEncoder(w)
-	// e.Encode(rf.xxx)
-	// e.Encode(rf.yyy)
-	// data := w.Bytes()
-	// rf.persister.SaveRaftState(data)
-}
-
-//
-// restore previously persisted state.
-//
-func (rf *Raft) readPersist(data []byte) {
-	if data == nil || len(data) < 1 { // bootstrap without any state?
-		return
-	}
-	// Your code here (2C).
-	// Example:
-	// r := bytes.NewBuffer(data)
-	// d := labgob.NewDecoder(r)
-	// var xxx
-	// var yyy
-	// if d.Decode(&xxx) != nil ||
-	//    d.Decode(&yyy) != nil {
-	//   error...
-	// } else {
-	//   rf.xxx = xxx
-	//   rf.yyy = yyy
-	// }
-}
-
-//
-// A service wants to switch to snapshot.  Only do so if Raft hasn't
-// have more recent info since it communicate the snapshot on applyCh.
-//
-func (rf *Raft) CondInstallSnapshot(lastIncludedTerm int, lastIncludedIndex int, snapshot []byte) bool {
-
-	// Your code here (2D).
-
-	return true
-}
-
-// the service says it has created a snapshot that has
-// all info up to and including index. this means the
-// service no longer needs the log through (and including)
-// that index. Raft should now trim its log as much as possible.
-func (rf *Raft) Snapshot(index int, snapshot []byte) {
-	// Your code here (2D).
-
+	commitIndex int
+	lastApplied int
+	nextIndex   []int //对于每个节点，下次发送日志的index
+	matchIndex  []int
+	grantVote   chan int
 }
 
 //
@@ -179,7 +124,7 @@ type AppendEntriesArgs struct {
 	PrevLogIndex int
 	PrevLogTerm  int
 	Entries      []LogEntry
-	LeaderCommit int
+	LeaderCommit int //代表领导者已提交的最大的日志索引。跟随者将提交日志索引小于LeaderCommit的日志，并将该日志中的命令应用到自己的状态机。
 }
 
 type AppendEntriesReply struct {
@@ -187,29 +132,164 @@ type AppendEntriesReply struct {
 	Success bool
 }
 
+func GetHeartBeatTime() time.Duration {
+	heartBeatTimeOut := rand.Intn(20) + 1
+	heartBeat := time.Millisecond * time.Duration(heartBeatTimeOut)
+	return heartBeat
+}
+
+func GetElectionTime() time.Duration {
+	electTimeOut := rand.Intn(151) + 150
+	elecTime := time.Millisecond * time.Duration(electTimeOut)
+	return elecTime
+}
+
+// return currentTerm and whether this server
+// believes it is the leader.
+func (rf *Raft) GetState() (int, bool) {
+
+	var term int
+	var isleader bool
+	// Your code here (2A).
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+	term = rf.currentTerm
+	isleader = false
+	if rf.state == 2 {
+		isleader = true
+	}
+	return term, isleader
+}
+
+//
+// save Raft's persistent state to stable storage,
+// where it can later be retrieved after a crash and restart.
+// see paper's Figure 2 for a description of what should be persistent.
+//
+func (rf *Raft) persist() {
+	w := new(bytes.Buffer)
+	e := labgob.NewEncoder(w)
+	e.Encode(rf.currentTerm)
+	e.Encode(rf.votedFor)
+	e.Encode(rf.log)
+	data := w.Bytes()
+	rf.persister.SaveRaftState(data)
+}
+
+//
+// restore previously persisted state.
+//
+func (rf *Raft) readPersist(data []byte) {
+	if data == nil || len(data) < 1 { // bootstrap without any state?
+		return
+	}
+	r := bytes.NewBuffer(data)
+	d := labgob.NewDecoder(r)
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+	d.Decode(&rf.currentTerm)
+	d.Decode(&rf.votedFor)
+	d.Decode(&rf.log)
+}
+
+//
+// A service wants to switch to snapshot.  Only do so if Raft hasn't
+// have more recent info since it communicate the snapshot on applyCh.
+//
+func (rf *Raft) CondInstallSnapshot(lastIncludedTerm int, lastIncludedIndex int, snapshot []byte) bool {
+
+	// Your code here (2D).
+
+	return true
+}
+
+// the service says it has created a snapshot that has
+// all info up to and including index. this means the
+// service no longer needs the log through (and including)
+// that index. Raft should now trim its log as much as possible.
+func (rf *Raft) Snapshot(index int, snapshot []byte) {
+	// Your code here (2D).
+
+}
+
 //
 // example RequestVote RPC handler.
 //跟随者根据args决定是否投票给该候选者。
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// Your code here (2A, 2B).
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+	rf.electionTimer.Reset(GetElectionTime())
+	if args.Term > rf.currentTerm {
+		rf.currentTerm = args.Term
+		rf.state = stateFollower
+		rf.votedFor = 0
+	}
 	if args.Term < rf.currentTerm || rf.votedFor == 1 {
+		//任期比自己小 ， 该任期票已投
+		fmt.Println("Not Vote")
 		reply.VoteGranted = false
-		return
-	} else {
-		lastIdx := len(rf.log) - 1
-		if args.LastLogTerm < rf.log[lastIdx].Term || (args.LastLogTerm == rf.log[lastIdx].Term && args.LastLogIndex < rf.log[lastIdx].Index) {
+		reply.Term = rf.currentTerm
+	} else if rf.votedFor == 0 {
+		lastIdx := rf.getLastLogIndex()
+		lastTerm := rf.getLastLogTerm()
+		if lastIdx == -1 && lastTerm == -1 {
+			fmt.Println(rf.me, " Vote")
+			reply.VoteGranted = true
+			reply.Term = rf.currentTerm
+			rf.votedFor = 1
+		} else if args.LastLogTerm < rf.log[lastIdx].Term || (args.LastLogTerm == rf.log[lastIdx].Term && args.LastLogIndex < rf.log[lastIdx].Index) {
+			fmt.Println("Not Vote")
 			reply.VoteGranted = false
-			return
+			reply.Term = rf.currentTerm
 		} else {
+			fmt.Println(rf.me, " Vote")
 			reply.Term = rf.currentTerm
 			reply.VoteGranted = true
 			rf.votedFor = 1
 		}
 	}
+
 }
 
 func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+	rf.electionTimer.Reset(GetElectionTime())
+	if args.Term > rf.currentTerm {
+		rf.currentTerm = args.Term
+		rf.state = stateFollower
+		rf.votedFor = 0
+	}
+	if args.Term < rf.currentTerm || len(args.Entries) == 0 {
+		reply.Term = rf.currentTerm
+		reply.Success = false
+	} else {
+		//还需要修改commitIndex
+		if args.PrevLogIndex == rf.getLastLogIndex() && args.PrevLogTerm == rf.getLastLogTerm() ||
+			args.PrevLogIndex <= rf.getLastLogIndex() && args.PrevLogTerm == rf.log[args.PrevLogIndex].Term {
+			//刚好一致 或 在领导者的最后一个索引处，任期一致。则删除这之后多余的
+			rf.log = rf.log[:args.PrevLogIndex+1]
+			rf.log = append(rf.log, args.Entries...)
+			reply.Success = true
+			reply.Term = rf.currentTerm
 
+			if args.LeaderCommit > rf.commitIndex {
+				if rf.getLastLogIndex() > rf.commitIndex {
+					rf.commitIndex = rf.getLastLogIndex()
+				}
+			}
+		} else {
+			reply.Success = false
+			reply.Term = rf.currentTerm
+		}
+	}
+}
+
+//如果跟随者宕机或请求超时，日志没有复制成功，领导者将反复尝试发送AppendEntries消息。
+func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *AppendEntriesReply) bool {
+	ok := rf.peers[server].Call("Raft.AppendEntries", args, reply)
+	return ok
 }
 
 //
@@ -259,13 +339,42 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 // if it's ever committed. the second return value is the current
 // term. the third return value is true if this server believes it is
 // the leader.
-//
+//第一个返回值表示的日志的索引号，第二个表示任期号，第三个表示是否是领导者
 func (rf *Raft) Start(command interface{}) (int, int, bool) {
-	index := -1
-	term := -1
-	isLeader := true
+	isLeader := false
 
-	// Your code here (2B).
+	rf.mu.Lock()
+	index := len(rf.log) - 1
+	term := rf.currentTerm
+	if rf.state == stateLeader {
+		isLeader = true
+		logEntry := LogEntry{index, term, command}
+		rf.log = append(rf.log, logEntry)
+		index = len(rf.log) - 1
+
+		entryPackage := AppendEntriesArgs{
+			Term:         rf.currentTerm,
+			LeaderId:     rf.me,
+			PrevLogIndex: rf.getLastLogIndex(),
+			PrevLogTerm:  rf.getLastLogTerm(),
+			LeaderCommit: rf.commitIndex,
+		}
+		for i := 0; i < len(rf.peers); i++ {
+			if i != rf.me {
+				entryPackage.Entries = rf.log[rf.nextIndex[i]:]
+				var entryReply AppendEntriesReply
+				rf.sendAppendEntries(i, &entryPackage, &entryReply)
+				//处理跟随者的回复
+				if entryReply.Success == true {
+					rf.nextIndex[i] = rf.getLastLogIndex() + 1
+				} else {
+					//处理循环发送的问题
+				}
+			}
+
+		}
+	}
+	rf.mu.Unlock()
 
 	return index, term, isLeader
 }
@@ -291,42 +400,99 @@ func (rf *Raft) killed() bool {
 	return z == 1
 }
 
-// The ticker go routine starts a new election if this peer hasn't received
-// heartsbeats recently.
-//？？?leader在超时选举时间内没有收到任何响应，如何处理
-//选举超时时间：一个随机数在150-300ms。当follower在选举超时时间内没有收到leader的响应，则申请当leader，状态变为candidate。
-func (rf *Raft) ticker() {
-	rand.Seed(time.Now().UnixNano())
-	for rf.killed() == false {
-		elecTimeOut := rand.Intn(151) + 150
-		time.Sleep(time.Millisecond * time.Duration(rand.Intn(151)+150))
-		if time.Duration(time.Since(rf.heartBeatTime).Milliseconds()) > time.Millisecond*time.Duration(elecTimeOut) {
-			rf.state = 1
-			rf.votedFor = 1
-			voteSum := 1
-			var reqVoteArgs RequestVoteArgs
-			reqVoteArgs.Term = rf.currentTerm + 1
-			reqVoteArgs.CandidateId = rf.me
-			reqVoteArgs.LastLogIndex = rf.log[len(rf.log)-1].Index
-			reqVoteArgs.LastLogTerm = rf.log[len(rf.log)-1].Term
-			for i := 0; i < len(rf.peers); i++ {
-				if i != rf.me {
-					var reqVoteReply RequestVoteReply
-					rf.sendRequestVote(i, &reqVoteArgs, &reqVoteReply)
-					//候选者查看票数是否达到了一半以上。若达到则成为leader
-					if reqVoteReply.VoteGranted == true {
-						voteSum++
+func (rf *Raft) getLastLogIndex() int {
+	if len(rf.log) == 0 {
+		return -1
+	} else {
+		return rf.log[len(rf.log)-1].Index
+	}
+}
+
+func (rf *Raft) getLastLogTerm() int {
+	if len(rf.log) == 0 {
+		return -1
+	} else {
+		return rf.log[len(rf.log)-1].Term
+	}
+}
+
+func (rf *Raft) broadCastHeartBeat() {
+	heartBeatPackage := AppendEntriesArgs{
+		Term:         rf.currentTerm,
+		LeaderId:     rf.me,
+		PrevLogIndex: rf.getLastLogIndex(),
+		PrevLogTerm:  rf.getLastLogTerm(),
+		LeaderCommit: rf.commitIndex,
+	}
+	for i := 0; i < len(rf.peers); i++ {
+		if i != rf.me {
+			var heartBeatReply AppendEntriesReply
+			heartBeatReply.Success = false
+			rf.sendAppendEntries(i, &heartBeatPackage, &heartBeatReply)
+			//收到该心跳的返回包之后的处理
+		}
+	}
+}
+
+func (rf *Raft) startElect() {
+	voteSum := 1
+	requestVoteArgs := RequestVoteArgs{
+		Term:         rf.currentTerm,
+		CandidateId:  rf.me,
+		LastLogIndex: rf.getLastLogIndex(),
+		LastLogTerm:  rf.getLastLogTerm(),
+	}
+	var requestVoteReply RequestVoteReply
+	for i := 0; i < len(rf.peers); i++ {
+		if i != rf.me && rf.state == stateCandidate {
+			go func() {
+				ok := rf.peers[i].Call("Raft.RequestVote", requestVoteArgs, requestVoteReply)
+				if ok == true {
+					if requestVoteReply.Term > rf.currentTerm {
+						rf.currentTerm = requestVoteReply.Term
+						rf.state = stateFollower
+						rf.votedFor = 0
+					}
+					if requestVoteReply.VoteGranted {
+						voteSum += 1
 					}
 				}
-			}
-			if voteSum > len(rf.peers)/2 {
-				rf.state = 2
-			}
+			}()
 		}
-		// Your code here to check if a leader election should
-		// be started and to randomize sleeping time using
-		// time.Sleep().
+	}
+	if rf.state == stateCandidate && voteSum >= len(rf.peers)/2 {
+		rf.state = stateLeader
+		fmt.Println(rf.me, " become leader")
+		for i := 0; i < len(rf.peers); i++ {
+			rf.nextIndex[i] = rf.getLastLogIndex() + 1
+			rf.matchIndex[i] = 0
+		}
+	}
+}
 
+// The ticker go routine starts a new election if this peer hasn't received
+// heartsbeats recently.
+//？？?leader在超时选举时间内没有收到任何响应，如何处理（不可能出现该情况..只有领导者才会发送心跳包，当领导者发送心跳包，他就会收到响应）
+//选举超时时间：一个随机数在150-300ms。当follower在选举超时时间内没有收到leader的响应，则申请当leader，状态变为candidate。
+func (rf *Raft) ticker() {
+	for rf.killed() == false {
+		select {
+		case <-rf.heartBeatTimer.C:
+			rf.mu.Lock()
+			if rf.state == stateLeader {
+				rf.broadCastHeartBeat()
+			}
+			rf.mu.Unlock()
+			fmt.Println("heartBeatTimer timeout")
+		case <-rf.electionTimer.C:
+			fmt.Println("electionTimer timeout")
+			rf.mu.Lock()
+			rf.currentTerm += 1
+			rf.state = stateCandidate
+			rf.votedFor = 1
+			rf.startElect()
+			rf.mu.Unlock()
+		}
 	}
 }
 
@@ -342,20 +508,30 @@ func (rf *Raft) ticker() {
 // for any long-running work.
 func Make(peers []*labrpc.ClientEnd, me int,
 	persister *Persister, applyCh chan ApplyMsg) *Raft {
-	rf := &Raft{}
-	rf.peers = peers
-	rf.persister = persister
-	rf.me = me //int类型，表示自己在peers[]里面的下标
-
-	// Your initialization code here (2A, 2B, 2C).
-	rf.currentTerm = 0
-	rf.votedFor = 0
-
-	rf.heartBeatTime = time.Now()
-	rf.state = 0
+	fmt.Println("Raft start...")
+	rf := &Raft{
+		peers:          peers,
+		persister:      persister,
+		me:             me,
+		dead:           0,
+		currentTerm:    0,
+		votedFor:       0,
+		heartBeatTimer: time.NewTimer(GetHeartBeatTime()),
+		electionTimer:  time.NewTimer(GetElectionTime()),
+		state:          stateFollower,
+		commitIndex:    -1,
+		lastApplied:    -1,
+		nextIndex:      make([]int, len(peers)),
+		matchIndex:     make([]int, len(peers)),
+		grantVote:      make(chan int, serverSum),
+	}
 
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())
+	for i := 0; i < len(rf.peers); i++ {
+		rf.nextIndex[i] = rf.getLastLogIndex() + 1
+		rf.matchIndex[i] = 0
+	}
 
 	// start ticker goroutine to start elections
 	go rf.ticker()
