@@ -1,118 +1,1983 @@
+disconnect(0)
 Raft start...
+raft term is  0
+disconnect(1)
 Raft start...
+raft term is  0
+disconnect(2)
 Raft start...
+raft term is  0
+connect(0)
+connect(1)
+connect(2)
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+raft  0  term is 0  leader is false
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+raft  1  term is 0  leader is false
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+raft  2  term is 0  leader is false
 Test (2A): initial election ...
-heartBeatTimer timeout
-heartBeatTimer timeout
-heartBeatTimer timeout
-electionTimer timeout
-0  Vote
+checkOneLeader
+checkOneLeader iters: 0  ms: 487ms
+Ticker rf.mu.Lock()
+2  heartBeatTimer timeout rf.state= 0
+Ticker rf.mu.UnLock()
+Ticker rf.mu.Lock()
+0  heartBeatTimer timeout rf.state= 0
+Ticker rf.mu.UnLock()
+Ticker rf.mu.Lock()
+1  heartBeatTimer timeout rf.state= 0
+Ticker rf.mu.UnLock()
+0  electionTimer timeout rf.term= 0
+startElect111 rf.mu.Lock()
+0  startElect in term 1
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=0
+startElect222 rf.mu.Lock() 0
+startElect222 rf.mu.UnLock() 0
+333 i=2 rf.me=0
+startElect222 rf.mu.Lock() 0
+333 i=1 rf.me=0
+RequestVote rf.mu.Lock()
+2 change to follower in RequestVote args.Term=1 rf.Term=0
 2  Vote
+RequestVote rf.mu.UnLock()
+0 become leader
+startElect222 rf.mu.UnLock() 0
+startElect222 rf.mu.Lock() 0
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=1 rf.Term=0
+1  Vote
+RequestVote rf.mu.UnLock()
 labgob warning: Decoding into a non-default variable/field Term may not work
-1  become leader
-electionTimer timeout
-1  Vote
-2  Vote
-0  become leader
-electionTimer timeout
+startElect222 rf.mu.UnLock() 0
+2  electionTimer timeout rf.term= 1
+startElect111 rf.mu.Lock()
+2  startElect in term 2
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+RequestVote rf.mu.Lock()
+0 change to follower in RequestVote args.Term=2 rf.Term=1
 0  Vote
+RequestVote rf.mu.UnLock()
+2 become leader
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=2 rf.Term=1
 1  Vote
-2  become leader
-  ... Passed --   3.1  3    6     980    0
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+checkOneLeader sleep finish
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+checkOneLeader leaderNum: 1
+checkOneLeader： 2
+checkTerms ........
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+0  term is  2
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+1  term is  2
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+2  term is  2
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+0  term is  2
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+1  term is  2
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+2  term is  2
+2  is leader
+0  electionTimer timeout rf.term= 2
+startElect111 rf.mu.Lock()
+0  startElect in term 3
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=0
+startElect222 rf.mu.Lock() 0
+RequestVote rf.mu.Lock()
+2 change to follower in RequestVote args.Term=3 rf.Term=2
+2  Vote
+RequestVote rf.mu.UnLock()
+333 i=0 rf.me=0
+333 i=1 rf.me=0
+0 become leader
+startElect222 rf.mu.UnLock() 0
+startElect222 rf.mu.Lock() 0
+startElect222 rf.mu.UnLock() 0
+startElect222 rf.mu.Lock() 0
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=3 rf.Term=2
+1  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 0
+1  electionTimer timeout rf.term= 3
+startElect111 rf.mu.Lock()
+1  startElect in term 4
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=1
+startElect222 rf.mu.Lock() 1
+333 i=2 rf.me=1
+333 i=1 rf.me=1
+RequestVote rf.mu.Lock()
+0 change to follower in RequestVote args.Term=4 rf.Term=3
+0  Vote
+RequestVote rf.mu.UnLock()
+1 become leader
+startElect222 rf.mu.UnLock() 1
+startElect222 rf.mu.Lock() 1
+RequestVote rf.mu.Lock()
+2 change to follower in RequestVote args.Term=4 rf.Term=3
+2  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 1
+startElect222 rf.mu.Lock() 1
+startElect222 rf.mu.UnLock() 1
+1  electionTimer timeout rf.term= 4
+startElect111 rf.mu.Lock()
+1  startElect in term 5
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=1
+startElect222 rf.mu.Lock() 1
+333 i=2 rf.me=1
+333 i=1 rf.me=1
+RequestVote rf.mu.Lock()
+0 change to follower in RequestVote args.Term=5 rf.Term=4
+0  Vote
+RequestVote rf.mu.UnLock()
+1 become leader
+startElect222 rf.mu.UnLock() 1
+startElect222 rf.mu.Lock() 1
+RequestVote rf.mu.Lock()
+2 change to follower in RequestVote args.Term=5 rf.Term=4
+2  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 1
+startElect222 rf.mu.Lock() 1
+startElect222 rf.mu.UnLock() 1
+0  electionTimer timeout rf.term= 5
+startElect111 rf.mu.Lock()
+0  startElect in term 6
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=0
+startElect222 rf.mu.Lock() 0
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=6 rf.Term=5
+1  Vote
+RequestVote rf.mu.UnLock()
+333 i=0 rf.me=0
+333 i=2 rf.me=0
+0 become leader
+startElect222 rf.mu.UnLock() 0
+startElect222 rf.mu.Lock() 0
+startElect222 rf.mu.UnLock() 0
+startElect222 rf.mu.Lock() 0
+RequestVote rf.mu.Lock()
+2 change to follower in RequestVote args.Term=6 rf.Term=5
+2  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 0
+0  electionTimer timeout rf.term= 6
+startElect111 rf.mu.Lock()
+0  startElect in term 7
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=0
+startElect222 rf.mu.Lock() 0
+333 i=0 rf.me=0
+333 i=2 rf.me=0
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=7 rf.Term=6
+1  Vote
+RequestVote rf.mu.UnLock()
+0 become leader
+startElect222 rf.mu.UnLock() 0
+startElect222 rf.mu.Lock() 0
+startElect222 rf.mu.UnLock() 0
+startElect222 rf.mu.Lock() 0
+RequestVote rf.mu.Lock()
+2 change to follower in RequestVote args.Term=7 rf.Term=6
+2  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 0
+1  electionTimer timeout rf.term= 7
+startElect111 rf.mu.Lock()
+1  startElect in term 8
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=1
+startElect222 rf.mu.Lock() 1
+333 i=1 rf.me=1
+333 i=2 rf.me=1
+RequestVote rf.mu.Lock()
+0 change to follower in RequestVote args.Term=8 rf.Term=7
+0  Vote
+RequestVote rf.mu.UnLock()
+1 become leader
+startElect222 rf.mu.UnLock() 1
+startElect222 rf.mu.Lock() 1
+startElect222 rf.mu.UnLock() 1
+startElect222 rf.mu.Lock() 1
+RequestVote rf.mu.Lock()
+2 change to follower in RequestVote args.Term=8 rf.Term=7
+2  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 1
+2  electionTimer timeout rf.term= 8
+startElect111 rf.mu.Lock()
+2  startElect in term 9
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+333 i=2 rf.me=2
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=9 rf.Term=8
+1  Vote
+RequestVote rf.mu.UnLock()
+2 become leader
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+RequestVote rf.mu.Lock()
+0 change to follower in RequestVote args.Term=9 rf.Term=8
+0  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 9
+startElect111 rf.mu.Lock()
+2  startElect in term 10
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+333 i=2 rf.me=2
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=10 rf.Term=9
+1  Vote
+RequestVote rf.mu.UnLock()
+2 become leader
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+RequestVote rf.mu.Lock()
+0 change to follower in RequestVote args.Term=10 rf.Term=9
+0  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+1  electionTimer timeout rf.term= 10
+startElect111 rf.mu.Lock()
+1  startElect in term 11
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=1
+startElect222 rf.mu.Lock() 1
+333 i=1 rf.me=1
+333 i=2 rf.me=1
+RequestVote rf.mu.Lock()
+0 change to follower in RequestVote args.Term=11 rf.Term=10
+0  Vote
+RequestVote rf.mu.UnLock()
+1 become leader
+startElect222 rf.mu.UnLock() 1
+startElect222 rf.mu.Lock() 1
+startElect222 rf.mu.UnLock() 1
+startElect222 rf.mu.Lock() 1
+RequestVote rf.mu.Lock()
+2 change to follower in RequestVote args.Term=11 rf.Term=10
+2  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 1
+2  electionTimer timeout rf.term= 11
+startElect111 rf.mu.Lock()
+2  startElect in term 12
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+RequestVote rf.mu.Lock()
+0 change to follower in RequestVote args.Term=12 rf.Term=11
+0  Vote
+RequestVote rf.mu.UnLock()
+2 become leader
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=12 rf.Term=11
+1  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+checkTerms ........
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+0  term is  12
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+1  term is  12
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+2  term is  12
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+0  term is  12
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+1  term is  12
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+2  term is  12
+2  is leader
+warning: term changed even though there were no failurescheckOneLeader
+checkOneLeader iters: 0  ms: 473ms
+2  electionTimer timeout rf.term= 12
+startElect111 rf.mu.Lock()
+2  startElect in term 13
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+RequestVote rf.mu.Lock()
+0 change to follower in RequestVote args.Term=13 rf.Term=12
+0  Vote
+RequestVote rf.mu.UnLock()
+2 become leader
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=13 rf.Term=12
+1  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+0  electionTimer timeout rf.term= 13
+startElect111 rf.mu.Lock()
+0  startElect in term 14
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=0
+startElect222 rf.mu.Lock() 0
+333 i=0 rf.me=0
+333 i=1 rf.me=0
+RequestVote rf.mu.Lock()
+2 change to follower in RequestVote args.Term=14 rf.Term=13
+2  Vote
+RequestVote rf.mu.UnLock()
+0 become leader
+startElect222 rf.mu.UnLock() 0
+startElect222 rf.mu.Lock() 0
+startElect222 rf.mu.UnLock() 0
+startElect222 rf.mu.Lock() 0
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=14 rf.Term=13
+1  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 0
+checkOneLeader sleep finish
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+1  electionTimer timeout rf.term= 14
+startElect111 rf.mu.Lock()
+1  startElect in term 15
+startElect111 rf.mu.UnLock()
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+checkOneLeader leaderNum: 1
+checkOneLeader： 0
+  ... Passed --   3.0  3   28    4572    0
+333 i=2 rf.me=1
+startElect222 rf.mu.Lock() 1
+1 Call RequestVote  2  error
+startElect222 rf.mu.UnLock() 1
+333 i=0 rf.me=1
+startElect222 rf.mu.Lock() 1
+disconnect(0)
+1 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 1
+333 i=1 rf.me=1
+startElect222 rf.mu.Lock() 1
+startElect222 rf.mu.UnLock() 1
 Raft start...
+raft term is  0
+disconnect(1)
 Raft start...
+raft term is  0
+disconnect(2)
 Raft start...
+raft term is  0
+connect(0)
+connect(1)
+connect(2)
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+raft  0  term is 0  leader is false
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+raft  1  term is 0  leader is false
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+raft  2  term is 0  leader is false
 Test (2A): election after network failure ...
-heartBeatTimer timeout
-heartBeatTimer timeout
-heartBeatTimer timeout
-electionTimer timeout
-1  Vote
+checkOneLeader
+checkOneLeader iters: 0  ms: 481ms
+Ticker rf.mu.Lock()
+2  heartBeatTimer timeout rf.state= 0
+Ticker rf.mu.UnLock()
+Ticker rf.mu.Lock()
+0  heartBeatTimer timeout rf.state= 0
+Ticker rf.mu.UnLock()
+Ticker rf.mu.Lock()
+1  heartBeatTimer timeout rf.state= 0
+Ticker rf.mu.UnLock()
+0  electionTimer timeout rf.term= 14
+startElect111 rf.mu.Lock()
+0  startElect in term 15
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=0
+startElect222 rf.mu.Lock() 0
+startElect222 rf.mu.UnLock() 0
+333 i=1 rf.me=0
+startElect222 rf.mu.Lock() 0
+0 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 0
+333 i=2 rf.me=0
+startElect222 rf.mu.Lock() 0
+0 Call RequestVote  2  error
+startElect222 rf.mu.UnLock() 0
+2  electionTimer timeout rf.term= 14
+startElect111 rf.mu.Lock()
+2  startElect in term 15
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+0  electionTimer timeout rf.term= 0
+startElect111 rf.mu.Lock()
+0  startElect in term 1
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=0
+startElect222 rf.mu.Lock() 0
+startElect222 rf.mu.UnLock() 0
+333 i=2 rf.me=0
+startElect222 rf.mu.Lock() 0
+333 i=1 rf.me=0
+RequestVote rf.mu.Lock()
+2 change to follower in RequestVote args.Term=1 rf.Term=0
 2  Vote
-0  become leader
-electionTimer timeout
-0  Vote
-2  Vote
-1  become leader
-electionTimer timeout
-0  Vote
+RequestVote rf.mu.UnLock()
+0 become leader
+startElect222 rf.mu.UnLock() 0
+startElect222 rf.mu.Lock() 0
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=1 rf.Term=0
 1  Vote
-2  become leader
---- FAIL: TestReElection2A (5.43s)
-    config.go:400: expected one leader, got none
-Raft start...
-Raft start...
-Raft start...
-Raft start...
-Raft start...
-Raft start...
-Raft start...
-heartBeatTimer timeout
-Test (2A): multiple elections ...
-heartBeatTimer timeout
-heartBeatTimer timeout
-heartBeatTimer timeout
-heartBeatTimer timeout
-heartBeatTimer timeout
-heartBeatTimer timeout
-electionTimer timeout
-0  Vote
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 0
+2  electionTimer timeout rf.term= 1
+startElect111 rf.mu.Lock()
+2  startElect in term 2
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+RequestVote rf.mu.Lock()
+1 change to follower in RequestVote args.Term=2 rf.Term=1
 1  Vote
-3  Vote
-4  Vote
-5  Vote
-6  Vote
-2  become leader
-electionTimer timeout
+RequestVote rf.mu.UnLock()
+2 become leader
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+RequestVote rf.mu.Lock()
+0 change to follower in RequestVote args.Term=2 rf.Term=1
 0  Vote
-2  Vote
-3  Vote
-4  Vote
-5  Vote
-6  Vote
-1  become leader
-electionTimer timeout
-0  Vote
-1  Vote
-2  Vote
-3  Vote
-5  Vote
-6  Vote
-4  become leader
-electionTimer timeout
-0  Vote
-1  Vote
-2  Vote
-3  Vote
-4  Vote
-5  Vote
-6  become leader
-electionTimer timeout
-0  Vote
-1  Vote
-2  Vote
-4  Vote
-5  Vote
-6  Vote
-3  become leader
-electionTimer timeout
-0  Vote
-1  Vote
-2  Vote
-3  Vote
-4  Vote
-6  Vote
-5  become leader
-electionTimer timeout
-1  Vote
-2  Vote
-3  Vote
-4  Vote
-5  Vote
-6  Vote
-0  become leader
---- FAIL: TestManyElections2A (6.02s)
-    config.go:400: expected one leader, got none
-FAIL
-exit status 1
-FAIL	6.824/raft	14.567s
+RequestVote rf.mu.UnLock()
+startElect222 rf.mu.UnLock() 2
+checkOneLeader sleep finish
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+GetState rf.mu.Lock()
+GetState rf.mu.UnLock()
+checkOneLeader leaderNum: 1
+checkOneLeader： 2
+disconnect(2)
+checkOneLeader
+checkOneLeader iters: 0  ms: 549ms
+1  electionTimer timeout rf.term= 2
+startElect111 rf.mu.Lock()
+1  startElect in term 3
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=1
+startElect222 rf.mu.Lock() 1
+333 i=0 rf.me=1
+333 i=1 rf.me=1
+2  electionTimer timeout rf.term= 2
+startElect111 rf.mu.Lock()
+2  startElect in term 3
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+0  electionTimer timeout rf.term= 2
+startElect111 rf.mu.Lock()
+0  startElect in term 3
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=0
+startElect222 rf.mu.Lock() 0
+startElect222 rf.mu.UnLock() 0
+333 i=1 rf.me=0
+startElect222 rf.mu.Lock() 0
+333 i=2 rf.me=0
+checkOneLeader sleep finish
+1 Call RequestVote  2  error
+startElect222 rf.mu.UnLock() 1
+startElect222 rf.mu.Lock() 1
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 3
+startElect111 rf.mu.Lock()
+2  startElect in term 4
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 4
+startElect111 rf.mu.Lock()
+2  startElect in term 5
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 5
+startElect111 rf.mu.Lock()
+2  startElect in term 6
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 6
+startElect111 rf.mu.Lock()
+2  startElect in term 7
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 7
+startElect111 rf.mu.Lock()
+2  startElect in term 8
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 8
+startElect111 rf.mu.Lock()
+2  startElect in term 9
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 9
+startElect111 rf.mu.Lock()
+2  startElect in term 10
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 10
+startElect111 rf.mu.Lock()
+2  startElect in term 11
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 11
+startElect111 rf.mu.Lock()
+2  startElect in term 12
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 12
+startElect111 rf.mu.Lock()
+2  startElect in term 13
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 13
+startElect111 rf.mu.Lock()
+2  startElect in term 14
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 14
+startElect111 rf.mu.Lock()
+2  startElect in term 15
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 15
+startElect111 rf.mu.Lock()
+2  startElect in term 16
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 16
+startElect111 rf.mu.Lock()
+2  startElect in term 17
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 17
+startElect111 rf.mu.Lock()
+2  startElect in term 18
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 18
+startElect111 rf.mu.Lock()
+2  startElect in term 19
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 19
+startElect111 rf.mu.Lock()
+2  startElect in term 20
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 20
+startElect111 rf.mu.Lock()
+2  startElect in term 21
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 21
+startElect111 rf.mu.Lock()
+2  startElect in term 22
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 22
+startElect111 rf.mu.Lock()
+2  startElect in term 23
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 23
+startElect111 rf.mu.Lock()
+2  startElect in term 24
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 24
+startElect111 rf.mu.Lock()
+2  startElect in term 25
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 25
+startElect111 rf.mu.Lock()
+2  startElect in term 26
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 26
+startElect111 rf.mu.Lock()
+2  startElect in term 27
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 27
+startElect111 rf.mu.Lock()
+2  startElect in term 28
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 28
+startElect111 rf.mu.Lock()
+2  startElect in term 29
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 29
+startElect111 rf.mu.Lock()
+2  startElect in term 30
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 30
+startElect111 rf.mu.Lock()
+2  startElect in term 31
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 31
+startElect111 rf.mu.Lock()
+2  startElect in term 32
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 32
+startElect111 rf.mu.Lock()
+2  startElect in term 33
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 33
+startElect111 rf.mu.Lock()
+2  startElect in term 34
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 34
+startElect111 rf.mu.Lock()
+2  startElect in term 35
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 35
+startElect111 rf.mu.Lock()
+2  startElect in term 36
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 36
+startElect111 rf.mu.Lock()
+2  startElect in term 37
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 37
+startElect111 rf.mu.Lock()
+2  startElect in term 38
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 38
+startElect111 rf.mu.Lock()
+2  startElect in term 39
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 39
+startElect111 rf.mu.Lock()
+2  startElect in term 40
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 40
+startElect111 rf.mu.Lock()
+2  startElect in term 41
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 41
+startElect111 rf.mu.Lock()
+2  startElect in term 42
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 42
+startElect111 rf.mu.Lock()
+2  startElect in term 43
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 43
+startElect111 rf.mu.Lock()
+2  startElect in term 44
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 44
+startElect111 rf.mu.Lock()
+2  startElect in term 45
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 45
+startElect111 rf.mu.Lock()
+2  startElect in term 46
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 46
+startElect111 rf.mu.Lock()
+2  startElect in term 47
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 47
+startElect111 rf.mu.Lock()
+2  startElect in term 48
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 48
+startElect111 rf.mu.Lock()
+2  startElect in term 49
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 49
+startElect111 rf.mu.Lock()
+2  startElect in term 50
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 50
+startElect111 rf.mu.Lock()
+2  startElect in term 51
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 51
+startElect111 rf.mu.Lock()
+2  startElect in term 52
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 52
+startElect111 rf.mu.Lock()
+2  startElect in term 53
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 53
+startElect111 rf.mu.Lock()
+2  startElect in term 54
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 54
+startElect111 rf.mu.Lock()
+2  startElect in term 55
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 55
+startElect111 rf.mu.Lock()
+2  startElect in term 56
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 56
+startElect111 rf.mu.Lock()
+2  startElect in term 57
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 57
+startElect111 rf.mu.Lock()
+2  startElect in term 58
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 58
+startElect111 rf.mu.Lock()
+2  startElect in term 59
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 59
+startElect111 rf.mu.Lock()
+2  startElect in term 60
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 60
+startElect111 rf.mu.Lock()
+2  startElect in term 61
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 61
+startElect111 rf.mu.Lock()
+2  startElect in term 62
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 62
+startElect111 rf.mu.Lock()
+2  startElect in term 63
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 63
+startElect111 rf.mu.Lock()
+2  startElect in term 64
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 64
+startElect111 rf.mu.Lock()
+2  startElect in term 65
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 65
+startElect111 rf.mu.Lock()
+2  startElect in term 66
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 66
+startElect111 rf.mu.Lock()
+2  startElect in term 67
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 67
+startElect111 rf.mu.Lock()
+2  startElect in term 68
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 68
+startElect111 rf.mu.Lock()
+2  startElect in term 69
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 69
+startElect111 rf.mu.Lock()
+2  startElect in term 70
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 70
+startElect111 rf.mu.Lock()
+2  startElect in term 71
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 71
+startElect111 rf.mu.Lock()
+2  startElect in term 72
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 72
+startElect111 rf.mu.Lock()
+2  startElect in term 73
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 73
+startElect111 rf.mu.Lock()
+2  startElect in term 74
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 74
+startElect111 rf.mu.Lock()
+2  startElect in term 75
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 75
+startElect111 rf.mu.Lock()
+2  startElect in term 76
+startElect111 rf.mu.UnLock()
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 76
+startElect111 rf.mu.Lock()
+2  startElect in term 77
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=2 rf.me=2
+333 i=1 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 77
+startElect111 rf.mu.Lock()
+2  startElect in term 78
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 78
+startElect111 rf.mu.Lock()
+2  startElect in term 79
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=0 rf.me=2
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 79
+startElect111 rf.mu.Lock()
+2  startElect in term 80
+startElect111 rf.mu.UnLock()
+333 i=0 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=1 rf.me=2
+333 i=2 rf.me=2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 80
+startElect111 rf.mu.Lock()
+2  startElect in term 81
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+2 Call RequestVote  1  error
+startElect222 rf.mu.UnLock() 2
+startElect222 rf.mu.Lock() 2
+2 Call RequestVote  0  error
+startElect222 rf.mu.UnLock() 2
+2  electionTimer timeout rf.term= 81
+startElect111 rf.mu.Lock()
+2  startElect in term 82
+startElect111 rf.mu.UnLock()
+333 i=2 rf.me=2
+startElect222 rf.mu.Lock() 2
+startElect222 rf.mu.UnLock() 2
+333 i=1 rf.me=2
+startElect222 rf.mu.Lock() 2
+333 i=0 rf.me=2
+panic: test timed out after 10m0s
+
+goroutine 738 [running]:
+testing.(*M).startAlarm.func1()
+	/usr/lib/go-1.18/src/testing/testing.go:2029 +0xbb
+created by time.goFunc
+	/usr/lib/go-1.18/src/time/sleep.go:176 +0x48
+
+goroutine 1 [chan receive]:
+testing.(*T).Run(0xc000210000, {0x725dd9, 0x10}, 0x733a68)
+	/usr/lib/go-1.18/src/testing/testing.go:1487 +0x750
+testing.runTests.func1(0x0?)
+	/usr/lib/go-1.18/src/testing/testing.go:1839 +0x9a
+testing.tRunner(0xc000210000, 0xc0001f3ba0)
+	/usr/lib/go-1.18/src/testing/testing.go:1439 +0x214
+testing.runTests(0xc0001c41e0?, {0x8da5e0, 0x18, 0x18}, {0x40?, 0x7f593bf82b10?, 0x8de660?})
+	/usr/lib/go-1.18/src/testing/testing.go:1837 +0x7e5
+testing.(*M).Run(0xc0001c41e0)
+	/usr/lib/go-1.18/src/testing/testing.go:1719 +0xa72
+main.main()
+	_testmain.go:93 +0x2e5
+
+goroutine 91 [semacquire]:
+sync.runtime_SemacquireMutex(0x0?, 0x0?, 0x4a0805?)
+	/usr/lib/go-1.18/src/runtime/sema.go:71 +0x25
+sync.(*Mutex).lockSlow(0xc0002d2000)
+	/usr/lib/go-1.18/src/sync/mutex.go:162 +0x21d
+sync.(*Mutex).Lock(0xc0002d2000)
+	/usr/lib/go-1.18/src/sync/mutex.go:81 +0x65
+6.824/raft.(*Raft).GetState(0xc0002d2000)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:148 +0x33
+6.824/raft.(*config).checkOneLeader(0xc0000e2000)
+	/home/xuqianhui/mit6.824/src/raft/config.go:397 +0x505
+6.824/raft.TestReElection2A(0x0?)
+	/home/xuqianhui/mit6.824/src/raft/test_test.go:66 +0xd1
+testing.tRunner(0xc0000ce820, 0x733a68)
+	/usr/lib/go-1.18/src/testing/testing.go:1439 +0x214
+created by testing.(*T).Run
+	/usr/lib/go-1.18/src/testing/testing.go:1486 +0x725
+
+goroutine 92 [select]:
+6.824/labrpc.MakeNetwork.func1()
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:156 +0x11a
+created by 6.824/labrpc.MakeNetwork
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:154 +0x2e5
+
+goroutine 22 [chan receive]:
+6.824/raft.(*config).applier(0xc0001e06c0, 0x0, 0x0?)
+	/home/xuqianhui/mit6.824/src/raft/config.go:170 +0x88
+created by 6.824/raft.(*config).start1
+	/home/xuqianhui/mit6.824/src/raft/config.go:291 +0xa9c
+
+goroutine 129 [chan receive]:
+6.824/raft.(*config).applier(0xc0000e2000, 0x1, 0x0?)
+	/home/xuqianhui/mit6.824/src/raft/config.go:170 +0x88
+created by 6.824/raft.(*config).start1
+	/home/xuqianhui/mit6.824/src/raft/config.go:291 +0xa9c
+
+goroutine 24 [chan receive]:
+6.824/raft.(*config).applier(0xc0001e06c0, 0x1, 0x0?)
+	/home/xuqianhui/mit6.824/src/raft/config.go:170 +0x88
+created by 6.824/raft.(*config).start1
+	/home/xuqianhui/mit6.824/src/raft/config.go:291 +0xa9c
+
+goroutine 26 [chan receive]:
+6.824/raft.(*config).applier(0xc0001e06c0, 0x2, 0x0?)
+	/home/xuqianhui/mit6.824/src/raft/config.go:170 +0x88
+created by 6.824/raft.(*config).start1
+	/home/xuqianhui/mit6.824/src/raft/config.go:291 +0xa9c
+
+goroutine 182 [select]:
+6.824/labrpc.(*Network).processReq(0xc0000c41e0, {{0x6de4a0, 0xc00029f6b0}, {0x725d99, 0x10}, {0x780ec0, 0x6d54c0}, {0xc00021e540, 0x64, 0xbc}, ...})
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:254 +0x551
+created by 6.824/labrpc.MakeNetwork.func1
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:160 +0x4c
+
+goroutine 719 [semacquire]:
+sync.runtime_SemacquireMutex(0x4a0805?, 0xf0?, 0xc0001a05b0?)
+	/usr/lib/go-1.18/src/runtime/sema.go:71 +0x25
+sync.(*Mutex).lockSlow(0xc0002d2180)
+	/usr/lib/go-1.18/src/sync/mutex.go:162 +0x21d
+sync.(*Mutex).Lock(0xc0002d2180)
+	/usr/lib/go-1.18/src/sync/mutex.go:81 +0x65
+6.824/raft.(*Raft).startElect.func1(0x0)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:411 +0x125
+created by 6.824/raft.(*Raft).startElect
+	/home/xuqianhui/mit6.824/src/raft/raft.go:409 +0x4e5
+
+goroutine 156 [semacquire]:
+sync.runtime_SemacquireMutex(0x4a0805?, 0xf0?, 0xc0001712b0?)
+	/usr/lib/go-1.18/src/runtime/sema.go:71 +0x25
+sync.(*Mutex).lockSlow(0xc0002d20c0)
+	/usr/lib/go-1.18/src/sync/mutex.go:162 +0x21d
+sync.(*Mutex).Lock(0xc0002d20c0)
+	/usr/lib/go-1.18/src/sync/mutex.go:81 +0x65
+6.824/raft.(*Raft).startElect.func1(0x1)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:411 +0x125
+created by 6.824/raft.(*Raft).startElect
+	/home/xuqianhui/mit6.824/src/raft/raft.go:409 +0x4e5
+
+goroutine 179 [select]:
+6.824/labrpc.(*Network).processReq(0xc0000c41e0, {{0x6de4a0, 0xc000081950}, {0x725d99, 0x10}, {0x780ec0, 0x6d54c0}, {0xc00021e480, 0x62, 0xba}, ...})
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:254 +0x551
+created by 6.824/labrpc.MakeNetwork.func1
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:160 +0x4c
+
+goroutine 178 [semacquire]:
+sync.runtime_SemacquireMutex(0x4a0805?, 0xf0?, 0xc0000d3a00?)
+	/usr/lib/go-1.18/src/runtime/sema.go:71 +0x25
+sync.(*Mutex).lockSlow(0xc0002d2000)
+	/usr/lib/go-1.18/src/sync/mutex.go:162 +0x21d
+sync.(*Mutex).Lock(0xc0002d2000)
+	/usr/lib/go-1.18/src/sync/mutex.go:81 +0x65
+6.824/raft.(*Raft).startElect.func1(0x2)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:411 +0x125
+created by 6.824/raft.(*Raft).startElect
+	/home/xuqianhui/mit6.824/src/raft/raft.go:409 +0x4e5
+
+goroutine 180 [semacquire]:
+sync.runtime_SemacquireMutex(0xc0000b5308?, 0xc0?, 0x6ddca0?)
+	/usr/lib/go-1.18/src/runtime/sema.go:71 +0x25
+sync.(*Mutex).lockSlow(0xc0002d20c0)
+	/usr/lib/go-1.18/src/sync/mutex.go:162 +0x21d
+sync.(*Mutex).Lock(0xc0002d20c0)
+	/usr/lib/go-1.18/src/sync/mutex.go:81 +0x65
+6.824/raft.(*Raft).RequestVote(0xc0002d20c0, 0xc00021bc00, 0xc000234530)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:211 +0x5d
+reflect.Value.call({0xc0001a6360?, 0xc000280e58?, 0xc000234530?}, {0x722eef, 0x4}, {0xc0000b5bf0, 0x3, 0x6f59e0?})
+	/usr/lib/go-1.18/src/reflect/value.go:556 +0xd9d
+reflect.Value.Call({0xc0001a6360?, 0xc000280e58?, 0xc0001a52a8?}, {0xc0000b5bf0, 0x3, 0x3})
+	/usr/lib/go-1.18/src/reflect/value.go:339 +0xd8
+6.824/labrpc.(*Service).dispatch(0xc00028be40, {0x725d9e, 0xb}, {{0x6de4a0, 0xc000081950}, {0x725d99, 0x10}, {0x780ec0, 0x6d54c0}, {0xc00021e480, ...}, ...})
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:499 +0x47c
+6.824/labrpc.(*Server).dispatch(0xc0002a54e8, {{0x6de4a0, 0xc000081950}, {0x725d99, 0x10}, {0x780ec0, 0x6d54c0}, {0xc00021e480, 0x62, 0xba}, ...})
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:423 +0x266
+6.824/labrpc.(*Network).processReq.func1()
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:243 +0x9d
+created by 6.824/labrpc.(*Network).processReq
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:242 +0x292
+
+goroutine 155 [chan receive]:
+6.824/labrpc.(*ClientEnd).Call(0xc0002994c0, {0x725d99, 0x10}, {0x6d54c0, 0xc00016ac60}, {0x6d5500, 0xc0001638a0})
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:115 +0x345
+6.824/raft.(*Raft).startElect.func1(0x0)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:414 +0x265
+created by 6.824/raft.(*Raft).startElect
+	/home/xuqianhui/mit6.824/src/raft/raft.go:409 +0x4e5
+
+goroutine 65 [chan receive]:
+6.824/labrpc.(*ClientEnd).Call(0xc00008b660, {0x725d99, 0x10}, {0x6d54c0, 0xc00021b9a0}, {0x6d5500, 0xc000234270})
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:115 +0x345
+6.824/raft.(*Raft).startElect.func1(0x1)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:414 +0x265
+created by 6.824/raft.(*Raft).startElect
+	/home/xuqianhui/mit6.824/src/raft/raft.go:409 +0x4e5
+
+goroutine 126 [semacquire]:
+sync.runtime_SemacquireMutex(0xc0002ac9c0?, 0xc0?, 0xc0002ac360?)
+	/usr/lib/go-1.18/src/runtime/sema.go:71 +0x25
+sync.(*Mutex).lockSlow(0xc0002d2000)
+	/usr/lib/go-1.18/src/sync/mutex.go:162 +0x21d
+sync.(*Mutex).Lock(0xc0002d2000)
+	/usr/lib/go-1.18/src/sync/mutex.go:81 +0x65
+6.824/raft.(*Raft).ticker(0xc0002d2000)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:464 +0x317
+created by 6.824/raft.Make
+	/home/xuqianhui/mit6.824/src/raft/raft.go:510 +0x73e
+
+goroutine 127 [chan receive]:
+6.824/raft.(*config).applier(0xc0000e2000, 0x0, 0xc00018e230?)
+	/home/xuqianhui/mit6.824/src/raft/config.go:170 +0x88
+created by 6.824/raft.(*config).start1
+	/home/xuqianhui/mit6.824/src/raft/config.go:291 +0xa9c
+
+goroutine 128 [select]:
+6.824/raft.(*Raft).ticker(0xc0002d20c0)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:453 +0x12e
+created by 6.824/raft.Make
+	/home/xuqianhui/mit6.824/src/raft/raft.go:510 +0x73e
+
+goroutine 130 [semacquire]:
+sync.runtime_SemacquireMutex(0xc0002acf00?, 0x60?, 0xc000094180?)
+	/usr/lib/go-1.18/src/runtime/sema.go:71 +0x25
+sync.(*Mutex).lockSlow(0xc0002d2180)
+	/usr/lib/go-1.18/src/sync/mutex.go:162 +0x21d
+sync.(*Mutex).Lock(0xc0002d2180)
+	/usr/lib/go-1.18/src/sync/mutex.go:81 +0x65
+6.824/raft.(*Raft).ticker(0xc0002d2180)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:464 +0x317
+created by 6.824/raft.Make
+	/home/xuqianhui/mit6.824/src/raft/raft.go:510 +0x73e
+
+goroutine 131 [chan receive]:
+6.824/raft.(*config).applier(0xc0000e2000, 0x2, 0x0?)
+	/home/xuqianhui/mit6.824/src/raft/config.go:170 +0x88
+created by 6.824/raft.(*config).start1
+	/home/xuqianhui/mit6.824/src/raft/config.go:291 +0xa9c
+
+goroutine 183 [semacquire]:
+sync.runtime_SemacquireMutex(0xc000241308?, 0xc0?, 0x6ddca0?)
+	/usr/lib/go-1.18/src/runtime/sema.go:71 +0x25
+sync.(*Mutex).lockSlow(0xc0002d2000)
+	/usr/lib/go-1.18/src/sync/mutex.go:162 +0x21d
+sync.(*Mutex).Lock(0xc0002d2000)
+	/usr/lib/go-1.18/src/sync/mutex.go:81 +0x65
+6.824/raft.(*Raft).RequestVote(0xc0002d2000, 0xc00021be40, 0xc0002347d0)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:211 +0x5d
+reflect.Value.call({0xc0001a6360?, 0xc000280e20?, 0xc0002347d0?}, {0x722eef, 0x4}, {0xc000241bf0, 0x3, 0x6f59e0?})
+	/usr/lib/go-1.18/src/reflect/value.go:556 +0xd9d
+reflect.Value.Call({0xc0001a6360?, 0xc000280e20?, 0xc0001a53c8?}, {0xc000241bf0, 0x3, 0x3})
+	/usr/lib/go-1.18/src/reflect/value.go:339 +0xd8
+6.824/labrpc.(*Service).dispatch(0xc00028bd80, {0x725d9e, 0xb}, {{0x6de4a0, 0xc00029f6b0}, {0x725d99, 0x10}, {0x780ec0, 0x6d54c0}, {0xc00021e540, ...}, ...})
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:499 +0x47c
+6.824/labrpc.(*Server).dispatch(0xc0002a5488, {{0x6de4a0, 0xc00029f6b0}, {0x725d99, 0x10}, {0x780ec0, 0x6d54c0}, {0xc00021e540, 0x64, 0xbc}, ...})
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:423 +0x266
+6.824/labrpc.(*Network).processReq.func1()
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:243 +0x9d
+created by 6.824/labrpc.(*Network).processReq
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:242 +0x292
+
+goroutine 720 [chan receive]:
+6.824/labrpc.(*ClientEnd).Call(0xc0002995a0, {0x725d99, 0x10}, {0x6d54c0, 0xc00016a400}, {0x6d5500, 0xc000396840})
+	/home/xuqianhui/mit6.824/src/labrpc/labrpc.go:115 +0x345
+6.824/raft.(*Raft).startElect.func1(0x1)
+	/home/xuqianhui/mit6.824/src/raft/raft.go:414 +0x265
+created by 6.824/raft.(*Raft).startElect
+	/home/xuqianhui/mit6.824/src/raft/raft.go:409 +0x4e5
+exit status 2
+FAIL	6.824/raft	600.025s

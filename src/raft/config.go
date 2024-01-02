@@ -8,19 +8,23 @@ package raft
 // test with the original before submitting.
 //
 
-import "6.824/labgob"
-import "6.824/labrpc"
-import "bytes"
-import "log"
-import "sync"
-import "testing"
-import "runtime"
-import "math/rand"
-import crand "crypto/rand"
-import "math/big"
-import "encoding/base64"
-import "time"
-import "fmt"
+import (
+	"bytes"
+	"log"
+	"math/rand"
+	"runtime"
+	"sync"
+	"testing"
+
+	"6.824/labgob"
+	"6.824/labrpc"
+
+	crand "crypto/rand"
+	"encoding/base64"
+	"fmt"
+	"math/big"
+	"time"
+)
 
 func randstring(n int) string {
 	b := make([]byte, 2*n)
@@ -96,6 +100,14 @@ func make_config(t *testing.T, n int, unreliable bool, snapshot bool) *config {
 	// connect everyone
 	for i := 0; i < cfg.n; i++ {
 		cfg.connect(i)
+	}
+
+	//savior
+	for i := 0; i < cfg.n; i++ {
+		if cfg.connected[i] {
+			term, leader := cfg.rafts[i].GetState()
+			fmt.Println("raft ", i, " term is", term, " leader is", leader)
+		}
 	}
 
 	return cfg
@@ -303,7 +315,7 @@ func (cfg *config) cleanup() {
 
 // attach server i to the net.
 func (cfg *config) connect(i int) {
-	// fmt.Printf("connect(%d)\n", i)
+	fmt.Printf("connect(%d)\n", i)
 
 	cfg.connected[i] = true
 
@@ -326,7 +338,8 @@ func (cfg *config) connect(i int) {
 
 // detach server i from the net.
 func (cfg *config) disconnect(i int) {
-	// fmt.Printf("disconnect(%d)\n", i)
+	//savior
+	fmt.Printf("disconnect(%d)\n", i)
 
 	cfg.connected[i] = false
 
@@ -370,9 +383,13 @@ func (cfg *config) setlongreordering(longrel bool) {
 // check that there's exactly one leader.
 // try a few times in case re-elections are needed.
 func (cfg *config) checkOneLeader() int {
+	fmt.Println("checkOneLeader")
 	for iters := 0; iters < 10; iters++ {
+
 		ms := 450 + (rand.Int63() % 100)
+		fmt.Println("checkOneLeader iters:", iters, " ms:", time.Duration(ms)*time.Millisecond)
 		time.Sleep(time.Duration(ms) * time.Millisecond)
+		fmt.Println("checkOneLeader sleep finish")
 
 		leaders := make(map[int][]int)
 		for i := 0; i < cfg.n; i++ {
@@ -380,8 +397,11 @@ func (cfg *config) checkOneLeader() int {
 				if term, leader := cfg.rafts[i].GetState(); leader {
 					leaders[term] = append(leaders[term], i)
 				}
+			} else {
+				fmt.Println("checkOneLeader: ", i, " is not connect")
 			}
 		}
+		fmt.Println("checkOneLeader leaderNum:", len(leaders))
 
 		lastTermWithLeader := -1
 		for term, leaders := range leaders {
@@ -394,6 +414,9 @@ func (cfg *config) checkOneLeader() int {
 		}
 
 		if len(leaders) != 0 {
+			//savior
+			fmt.Println("checkOneLeader：", leaders[lastTermWithLeader][0])
+
 			return leaders[lastTermWithLeader][0]
 		}
 	}
@@ -403,10 +426,21 @@ func (cfg *config) checkOneLeader() int {
 
 // check that everyone agrees on the term.
 func (cfg *config) checkTerms() int {
+	//savior
+	fmt.Println("checkTerms ........")
 	term := -1
 	for i := 0; i < cfg.n; i++ {
+		xterm, _ := cfg.rafts[i].GetState()
+		fmt.Println(i, " term is ", xterm)
+	}
+
+	for i := 0; i < cfg.n; i++ {
 		if cfg.connected[i] {
-			xterm, _ := cfg.rafts[i].GetState()
+			xterm, isleader := cfg.rafts[i].GetState()
+			fmt.Println(i, " term is ", xterm) //savior
+			if isleader == true {
+				fmt.Println(i, " is leader")
+			}
 			if term == -1 {
 				term = xterm
 			} else if term != xterm {
