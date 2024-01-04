@@ -58,10 +58,20 @@ type LogEntry struct {
 	Command interface{}
 }
 
+//描述机器此时处于什么状态
 const (
 	stateFollower  = 0
 	stateCandidate = 1
 	stateLeader    = 2
+)
+
+//描述机器的状态转换事件
+const (
+	heartBeat    = 0
+	electTimeOut = 1
+	electReady   = 2
+	newTerm      = 3
+	electSucc    = 4
 )
 const serverSum int = 100
 
@@ -77,7 +87,7 @@ type Raft struct {
 	// Look at the paper's Figure 2 for a description of what
 	// state a Raft server must maintain.
 	currentTerm int //服务器当前已知的最新任期号，必须持久化存储。
-	votedFor    int //值为0时，表示还未投票。值为1时，表示已投票
+	votedFor    int //值为-1时，表示还未投票。否则，表示投给了谁
 	//表示当前任期内选票投给了哪个候选者，持久化存储
 	log []LogEntry //日志，持久化存储。一个日志被存储在超过半数的节点上，则认为该记录已提交，状态机可以安全地执行该记录。
 	//
@@ -89,7 +99,7 @@ type Raft struct {
 	lastApplied int
 	nextIndex   []int //对于每个节点，下次发送日志的index
 	matchIndex  []int //对于每个节点，已知的最后成功复制过去的index
-	grantVote   chan int
+	voteSum     int
 }
 
 // example RequestVote RPC arguments structure.
@@ -146,13 +156,11 @@ func (rf *Raft) GetState() (int, bool) {
 	var isleader bool
 	// Your code here (2A).
 	rf.mu.Lock()
-	fmt.Println("GetState rf.mu.Lock()")
 	term = rf.currentTerm
 	isleader = false
 	if rf.state == 2 {
 		isleader = true
 	}
-	fmt.Println("GetState rf.mu.UnLock()")
 	rf.mu.Unlock()
 	return term, isleader
 }
@@ -178,11 +186,9 @@ func (rf *Raft) readPersist(data []byte) {
 	r := bytes.NewBuffer(data)
 	d := labgob.NewDecoder(r)
 	rf.mu.Lock()
-	fmt.Println("readPersist rf.mu.Lock()")
 	d.Decode(&rf.currentTerm)
 	d.Decode(&rf.votedFor)
 	d.Decode(&rf.log)
-	fmt.Println("readPersist rf.mu.UnLock()")
 	rf.mu.Unlock()
 }
 
@@ -204,60 +210,127 @@ func (rf *Raft) Snapshot(index int, snapshot []byte) {
 
 }
 
+func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *AppendEntriesReply) bool {
+	ok := rf.peers[server].Call("Raft.AppendEntries", args, reply)
+	if ok {
+		rf.mu.Lock()
+		if reply.Term > rf.currentTerm {
+			rf.mu.Unlock()
+			rf.stateMachine(newTerm, reply.Term)
+		} else {
+			rf.mu.Unlock()
+			for ok == true && reply.Success == false {
+				rf.mu.Lock()
+				if rf.nextIndex[server] != 0 {
+					rf.nextIndex[server] -= 1
+				}
+				idx := rf.nextIndex[server] - 1
+				if idx == -1 {
+					args.PrevLogIndex = idx
+					args.PrevLogIndex = idx
+				} else {
+					args.PrevLogIndex = rf.log[idx].Index
+					args.PrevLogTerm = rf.log[idx].Term
+				}
+				args.Entries = rf.log[rf.nextIndex[server] : rf.getLastLogIndex()+1]
+				rf.mu.Unlock()
+				ok = rf.peers[server].Call("Raft.AppendEntries", &args, &reply)
+			}
+		}
+	}
+	return ok
+}
+
+func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply) bool {
+	ok := true
+	if server == rf.me {
+		rf.mu.Lock()
+		rf.electionTimer.Reset(GetElectionTime())
+		rf.mu.Unlock()
+	} else {
+		ok = rf.peers[server].Call("Raft.RequestVote", args, reply)
+		if ok {
+			rf.mu.Lock()
+			if reply.Term > rf.currentTerm {
+				rf.mu.Unlock()
+				rf.stateMachine(newTerm, reply.Term)
+			} else {
+				if reply.VoteGranted {
+					rf.voteSum += 1
+				}
+				if rf.voteSum > len(rf.peers)/2 {
+					rf.mu.Unlock()
+					rf.stateMachine(electSucc, nil)
+				} else {
+					rf.mu.Unlock()
+				}
+			}
+		} else {
+			rf.mu.Lock()
+			// DPrintf("RequestVote Call error: from Peer%v Term%v to %v \n", rf.me, rf.currentTerm, server)
+			rf.mu.Unlock()
+		}
+	}
+
+	return ok
+}
+
 // example RequestVote RPC handler.
 // 跟随者根据args决定是否投票给该候选者。
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// Your code here (2A, 2B).
 	rf.mu.Lock()
-	fmt.Println("RequestVote rf.mu.Lock()")
 	if args.Term > rf.currentTerm {
-		fmt.Printf("%d change to follower in RequestVote args.Term=%d rf.Term=%d\n", rf.me, args.Term, rf.currentTerm)
-		rf.currentTerm = args.Term
-		rf.state = stateFollower
-		rf.votedFor = 0
+		rf.mu.Unlock()
+		rf.stateMachine(newTerm, args.Term)
+	} else {
+		rf.mu.Unlock()
 	}
-	if args.Term < rf.currentTerm || rf.votedFor == 1 {
+
+	rf.mu.Lock()
+	if args.Term < rf.currentTerm || rf.votedFor != -1 {
 		//任期比自己小 ， 该任期票已投
-		fmt.Println(rf.me, " Not Vote")
 		reply.VoteGranted = false
 		reply.Term = rf.currentTerm
-	} else if rf.votedFor == 0 {
+	} else if rf.votedFor == -1 {
 		lastIdx := rf.getLastLogIndex()
 		lastTerm := rf.getLastLogTerm()
 		if lastIdx == -1 && lastTerm == -1 {
-			fmt.Println(rf.me, " Vote")
 			reply.VoteGranted = true
 			reply.Term = rf.currentTerm
-			rf.votedFor = 1
+			rf.votedFor = args.CandidateId
 			rf.electionTimer.Reset(GetElectionTime())
 		} else if args.LastLogTerm < rf.log[lastIdx].Term || (args.LastLogTerm == rf.log[lastIdx].Term && args.LastLogIndex < rf.log[lastIdx].Index) {
-			fmt.Println(rf.me, " Not Vote")
 			reply.VoteGranted = false
 			reply.Term = rf.currentTerm
 		} else {
-			fmt.Println(rf.me, " Vote")
 			reply.Term = rf.currentTerm
 			reply.VoteGranted = true
-			rf.votedFor = 1
+			rf.votedFor = args.CandidateId
 			rf.electionTimer.Reset(GetElectionTime())
 		}
 	}
-	fmt.Println("RequestVote rf.mu.UnLock()")
+	// DPrintf("RequestVote :[Peer%v Term%v] RequestVote.args term %v,candidateId %v | reply term %v granted %v\n", rf.me, rf.currentTerm, args.Term, args.CandidateId, reply.Term, reply.VoteGranted)
 	rf.mu.Unlock()
 }
 
 func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
 	rf.mu.Lock()
-	fmt.Println("AppendEntries rf.mu.Lock()")
 	if args.Term > rf.currentTerm {
-		fmt.Println(rf.me, " change to follower in AppendEntries")
-		rf.currentTerm = args.Term
-		rf.state = stateFollower
-		rf.votedFor = 0
+		rf.mu.Unlock()
+		rf.stateMachine(newTerm, args.Term)
+	} else {
+		rf.mu.Unlock()
 	}
-	if args.Term < rf.currentTerm || len(args.Entries) == 0 {
+
+	rf.mu.Lock()
+	if args.Term < rf.currentTerm {
 		reply.Term = rf.currentTerm
 		reply.Success = false
+	} else if len(args.Entries) == 0 {
+		reply.Term = rf.currentTerm
+		reply.Success = true
+		rf.electionTimer.Reset(GetElectionTime())
 	} else {
 		//还需要修改commitIndex
 		if args.PrevLogIndex == rf.getLastLogIndex() && args.PrevLogTerm == rf.getLastLogTerm() ||
@@ -267,6 +340,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 			rf.log = append(rf.log, args.Entries...)
 			reply.Success = true
 			reply.Term = rf.currentTerm
+			rf.electionTimer.Reset(GetElectionTime())
 
 			if args.LeaderCommit > rf.commitIndex {
 				if rf.getLastLogIndex() > rf.commitIndex {
@@ -278,7 +352,6 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 			reply.Term = rf.currentTerm
 		}
 	}
-	fmt.Println("AppendEntries rf.mu.UnLock()")
 	rf.mu.Unlock()
 }
 
@@ -299,16 +372,13 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	isLeader := false
 
 	rf.mu.Lock()
-	fmt.Println("Start rf.mu.Lock()")
-	index := len(rf.log) - 1
+	index := rf.getLastLogIndex() + 1
 	term := rf.currentTerm
 	if rf.state == stateLeader {
 		isLeader = true
 		logEntry := LogEntry{index, term, command}
 		rf.log = append(rf.log, logEntry)
-		index = len(rf.log) - 1
 	}
-	fmt.Println("Start rf.mu.UnLock()")
 	rf.mu.Unlock()
 	return index, term, isLeader
 }
@@ -351,97 +421,99 @@ func (rf *Raft) getLastLogTerm() int {
 func (rf *Raft) broadCastHeartBeat() {
 
 	for i := 0; i < len(rf.peers); i++ {
-		go func(i int) {
+		if i != rf.me {
 			rf.mu.Lock()
-			fmt.Println("broadCast rf.mu.Lock()")
-			if i != rf.me {
-				heartBeatPackage := AppendEntriesArgs{
-					Term:         rf.currentTerm,
-					LeaderId:     rf.me,
-					PrevLogIndex: rf.getLastLogIndex(),
-					PrevLogTerm:  rf.getLastLogTerm(),
-					LeaderCommit: rf.commitIndex,
-				}
-				heartBeatPackage.Entries = rf.log[rf.nextIndex[i] : rf.getLastLogIndex()+1]
-				var reply AppendEntriesReply
-				ok := rf.peers[i].Call("Raft.AppendEntries", &heartBeatPackage, &reply)
-				if reply.Term > rf.currentTerm {
-					fmt.Println(rf.me, " change to follower in broadCastHeartBeat")
-					rf.currentTerm = reply.Term
-					rf.state = stateFollower
-					rf.votedFor = 0
-				} else {
-					for ok == true && reply.Success == false && rf.nextIndex[i] > 0 {
-						rf.nextIndex[i] -= 1
-						heartBeatPackage.Entries = rf.log[rf.nextIndex[i] : rf.getLastLogIndex()+1]
-						ok = rf.peers[i].Call("Raft.AppendEntries", &heartBeatPackage, &reply)
-						if ok == false {
-							break
-						}
-					}
-				}
+			var reply AppendEntriesReply
+			args := AppendEntriesArgs{
+				Term:         rf.currentTerm,
+				LeaderId:     rf.me,
+				LeaderCommit: rf.commitIndex,
 			}
-			fmt.Println("broadCast rf.mu.UnLock()")
+			idx := rf.nextIndex[i] - 1
+			if idx == -1 {
+				args.PrevLogIndex = idx
+				args.PrevLogTerm = idx
+			} else {
+				args.PrevLogIndex = rf.log[idx].Index
+				args.PrevLogTerm = rf.log[idx].Term
+			}
+			args.Entries = rf.log[rf.nextIndex[i] : rf.getLastLogIndex()+1]
 			rf.mu.Unlock()
-		}(i)
+			go rf.sendAppendEntries(i, &args, &reply)
+		}
 	}
 }
 
 func (rf *Raft) startElect() {
 	rf.mu.Lock()
-	fmt.Println("startElect111 rf.mu.Lock()")
-	rf.currentTerm += 1
-	rf.state = stateCandidate
-	rf.votedFor = 1
-
-	voteSum := 1
 	requestVoteArgs := RequestVoteArgs{
 		Term:         rf.currentTerm,
 		CandidateId:  rf.me,
 		LastLogIndex: rf.getLastLogIndex(),
 		LastLogTerm:  rf.getLastLogTerm(),
 	}
-	fmt.Println(rf.me, " startElect in term", rf.currentTerm)
-	fmt.Println("startElect111 rf.mu.UnLock()")
 	rf.mu.Unlock()
-	var requestVoteReply RequestVoteReply
+
 	for i := 0; i < len(rf.peers); i++ {
-		go func(i int) {
-			fmt.Printf("333 i=%d rf.me=%d\n", i, rf.me)
-			rf.mu.Lock()
-			fmt.Println("startElect222 rf.mu.Lock()", rf.me)
-			if i != rf.me {
-				ok := rf.peers[i].Call("Raft.RequestVote", &requestVoteArgs, &requestVoteReply)
-				if ok == true {
-					if requestVoteReply.Term > rf.currentTerm {
-						fmt.Println(rf.me, " change to follower in startElect")
-						rf.currentTerm = requestVoteReply.Term
-						rf.state = stateFollower
-						rf.votedFor = 0
-					}
-					if requestVoteReply.VoteGranted {
-						voteSum += 1
-					}
-				} else {
-					fmt.Println(rf.me, "Call RequestVote ", i, " error")
-				}
-			} else {
-				rf.electionTimer.Reset(GetElectionTime())
-			}
-			if rf.state == stateCandidate {
-				if voteSum > len(rf.peers)/2 {
-					fmt.Printf("%d become leader\n", rf.me)
-					rf.state = stateLeader
-					for j := 0; j < len(rf.peers); j++ {
-						rf.nextIndex[j] = rf.getLastLogIndex() + 1
-						rf.matchIndex[j] = 0
-					}
-				}
-			}
-			fmt.Println("startElect222 rf.mu.UnLock()", rf.me)
-			rf.mu.Unlock()
-		}(i)
+		var requestVoteReply RequestVoteReply
+		go rf.sendRequestVote(i, &requestVoteArgs, &requestVoteReply)
 	}
+}
+
+func (rf *Raft) stateMachine(state int, term interface{}) {
+	if state == newTerm {
+		rf.mu.Lock()
+		// DPrintf("stateMachine state=newTerm :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+		rf.currentTerm = term.(int)
+		rf.state = stateFollower
+		rf.voteSum = 0
+		rf.votedFor = -1
+		rf.mu.Unlock()
+		return
+	}
+	rf.mu.Lock()
+	rfState := rf.state
+	rf.mu.Unlock()
+	switch rfState {
+	case stateFollower:
+		if state == electTimeOut {
+			rf.mu.Lock()
+			// DPrintf("stateMachine state=electTimeOut :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+			rf.currentTerm += 1
+			rf.state = stateCandidate
+			rf.votedFor = rf.me
+			rf.voteSum = 1
+			rf.mu.Unlock()
+			rf.stateMachine(electReady, nil)
+		}
+	case stateCandidate:
+		if state == electReady {
+			rf.startElect()
+		} else if state == electSucc {
+			rf.mu.Lock()
+			// DPrintf("stateMachine state=electSucc :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+			rf.state = stateLeader
+			for i := 0; i < len(rf.peers); i++ {
+				rf.nextIndex[i] = rf.getLastLogIndex() + 1
+				rf.matchIndex[i] = 0
+			}
+			rf.mu.Unlock()
+		} else if state == electTimeOut {
+			rf.mu.Lock()
+			// DPrintf("stateMachine state=electTimeOut :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+			rf.currentTerm += 1
+			rf.state = stateCandidate
+			rf.votedFor = rf.me
+			rf.voteSum = 1
+			rf.mu.Unlock()
+			rf.stateMachine(electReady, nil)
+		}
+	case stateLeader:
+		if state == heartBeat {
+			rf.broadCastHeartBeat()
+		}
+	}
+
 }
 
 // The ticker go routine starts a new election if this peer hasn't received
@@ -452,19 +524,9 @@ func (rf *Raft) ticker() {
 	for rf.killed() == false {
 		select {
 		case <-rf.heartBeatTimer.C:
-			rf.mu.Lock()
-			fmt.Println("Ticker rf.mu.Lock()")
-			fmt.Println(rf.me, " heartBeatTimer timeout rf.state=", rf.state)
-			if rf.state == stateLeader {
-				rf.broadCastHeartBeat()
-			}
-			fmt.Println("Ticker rf.mu.UnLock()")
-			rf.mu.Unlock()
+			rf.stateMachine(heartBeat, nil)
 		case <-rf.electionTimer.C:
-			rf.mu.Lock()
-			fmt.Println(rf.me, " electionTimer timeout rf.term=", rf.currentTerm)
-			rf.mu.Unlock()
-			rf.startElect()
+			rf.stateMachine(electTimeOut, nil)
 		}
 	}
 }
@@ -487,7 +549,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 		me:             me,
 		dead:           0,
 		currentTerm:    0,
-		votedFor:       0,
+		votedFor:       -1,
 		heartBeatTimer: time.NewTimer(GetHeartBeatTime()),
 		electionTimer:  time.NewTimer(GetElectionTime()),
 		state:          stateFollower,
@@ -495,7 +557,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 		lastApplied:    -1,
 		nextIndex:      make([]int, len(peers)),
 		matchIndex:     make([]int, len(peers)),
-		grantVote:      make(chan int, serverSum),
+		voteSum:        0,
 	}
 
 	// initialize from state persisted before a crash

@@ -102,14 +102,6 @@ func make_config(t *testing.T, n int, unreliable bool, snapshot bool) *config {
 		cfg.connect(i)
 	}
 
-	//savior
-	for i := 0; i < cfg.n; i++ {
-		if cfg.connected[i] {
-			term, leader := cfg.rafts[i].GetState()
-			fmt.Println("raft ", i, " term is", term, " leader is", leader)
-		}
-	}
-
 	return cfg
 }
 
@@ -338,8 +330,6 @@ func (cfg *config) connect(i int) {
 
 // detach server i from the net.
 func (cfg *config) disconnect(i int) {
-	//savior
-	fmt.Printf("disconnect(%d)\n", i)
 
 	cfg.connected[i] = false
 
@@ -414,8 +404,6 @@ func (cfg *config) checkOneLeader() int {
 		}
 
 		if len(leaders) != 0 {
-			//savior
-			fmt.Println("checkOneLeader：", leaders[lastTermWithLeader][0])
 
 			return leaders[lastTermWithLeader][0]
 		}
@@ -426,18 +414,11 @@ func (cfg *config) checkOneLeader() int {
 
 // check that everyone agrees on the term.
 func (cfg *config) checkTerms() int {
-	//savior
-	fmt.Println("checkTerms ........")
 	term := -1
-	for i := 0; i < cfg.n; i++ {
-		xterm, _ := cfg.rafts[i].GetState()
-		fmt.Println(i, " term is ", xterm)
-	}
 
 	for i := 0; i < cfg.n; i++ {
 		if cfg.connected[i] {
 			xterm, isleader := cfg.rafts[i].GetState()
-			fmt.Println(i, " term is ", xterm) //savior
 			if isleader == true {
 				fmt.Println(i, " is leader")
 			}
