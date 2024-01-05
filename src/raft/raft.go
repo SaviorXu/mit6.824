@@ -138,8 +138,8 @@ type AppendEntriesReply struct {
 
 func GetHeartBeatTime() time.Duration {
 	heartBeatTimeOut := rand.Intn(20) + 1
-	heartBeat := time.Millisecond * time.Duration(heartBeatTimeOut)
-	return heartBeat
+	heartBeatTime := time.Millisecond * time.Duration(heartBeatTimeOut)
+	return heartBeatTime
 }
 
 func GetElectionTime() time.Duration {
@@ -234,7 +234,7 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 				}
 				args.Entries = rf.log[rf.nextIndex[server] : rf.getLastLogIndex()+1]
 				rf.mu.Unlock()
-				ok = rf.peers[server].Call("Raft.AppendEntries", &args, &reply)
+				ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
 			}
 		}
 	}
@@ -267,7 +267,7 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 			}
 		} else {
 			rf.mu.Lock()
-			// DPrintf("RequestVote Call error: from Peer%v Term%v to %v \n", rf.me, rf.currentTerm, server)
+			DPrintf("RequestVote Call error: from Peer%v Term%v to %v \n", rf.me, rf.currentTerm, server)
 			rf.mu.Unlock()
 		}
 	}
@@ -310,7 +310,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 			rf.electionTimer.Reset(GetElectionTime())
 		}
 	}
-	// DPrintf("RequestVote :[Peer%v Term%v] RequestVote.args term %v,candidateId %v | reply term %v granted %v\n", rf.me, rf.currentTerm, args.Term, args.CandidateId, reply.Term, reply.VoteGranted)
+	DPrintf("RequestVote :[Peer%v Term%v] RequestVote.args term %v,candidateId %v | reply term %v granted %v\n", rf.me, rf.currentTerm, args.Term, args.CandidateId, reply.Term, reply.VoteGranted)
 	rf.mu.Unlock()
 }
 
@@ -463,7 +463,7 @@ func (rf *Raft) startElect() {
 func (rf *Raft) stateMachine(state int, term interface{}) {
 	if state == newTerm {
 		rf.mu.Lock()
-		// DPrintf("stateMachine state=newTerm :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+		DPrintf("stateMachine state=newTerm :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
 		rf.currentTerm = term.(int)
 		rf.state = stateFollower
 		rf.voteSum = 0
@@ -478,7 +478,7 @@ func (rf *Raft) stateMachine(state int, term interface{}) {
 	case stateFollower:
 		if state == electTimeOut {
 			rf.mu.Lock()
-			// DPrintf("stateMachine state=electTimeOut :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+			DPrintf("stateMachine state=electTimeOut :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
 			rf.currentTerm += 1
 			rf.state = stateCandidate
 			rf.votedFor = rf.me
@@ -491,7 +491,7 @@ func (rf *Raft) stateMachine(state int, term interface{}) {
 			rf.startElect()
 		} else if state == electSucc {
 			rf.mu.Lock()
-			// DPrintf("stateMachine state=electSucc :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+			DPrintf("stateMachine state=electSucc :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
 			rf.state = stateLeader
 			for i := 0; i < len(rf.peers); i++ {
 				rf.nextIndex[i] = rf.getLastLogIndex() + 1
@@ -500,7 +500,7 @@ func (rf *Raft) stateMachine(state int, term interface{}) {
 			rf.mu.Unlock()
 		} else if state == electTimeOut {
 			rf.mu.Lock()
-			// DPrintf("stateMachine state=electTimeOut :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+			DPrintf("stateMachine state=electTimeOut :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
 			rf.currentTerm += 1
 			rf.state = stateCandidate
 			rf.votedFor = rf.me
@@ -510,6 +510,9 @@ func (rf *Raft) stateMachine(state int, term interface{}) {
 		}
 	case stateLeader:
 		if state == heartBeat {
+			rf.mu.Lock()
+			DPrintf("stateMachine state=heartBeat :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+			rf.mu.Unlock()
 			rf.broadCastHeartBeat()
 		}
 	}
@@ -524,6 +527,9 @@ func (rf *Raft) ticker() {
 	for rf.killed() == false {
 		select {
 		case <-rf.heartBeatTimer.C:
+			rf.mu.Lock()
+			rf.heartBeatTimer.Reset(GetHeartBeatTime())
+			rf.mu.Unlock()
 			rf.stateMachine(heartBeat, nil)
 		case <-rf.electionTimer.C:
 			rf.stateMachine(electTimeOut, nil)
