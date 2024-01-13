@@ -141,6 +141,8 @@ func (cfg *config) checkLogs(i int, m ApplyMsg) (string, bool) {
 	err_msg := ""
 	v := m.Command
 	for j := 0; j < len(cfg.logs); j++ {
+		xx, yy := cfg.logs[j][m.CommandIndex]
+		fmt.Println("j=", j, " xx=", xx, " yy=", yy, " m.CommandIndex=", m.CommandIndex)
 		if old, oldok := cfg.logs[j][m.CommandIndex]; oldok && old != v {
 			log.Printf("%v: log %v; server %v\n", i, cfg.logs[i], cfg.logs[j])
 			// some server has already committed a different value for this entry!
@@ -160,6 +162,7 @@ func (cfg *config) checkLogs(i int, m ApplyMsg) (string, bool) {
 // contents
 func (cfg *config) applier(i int, applyCh chan ApplyMsg) {
 	for m := range applyCh {
+		fmt.Println("CommandValid=", m.CommandValid, " m.Command=", m.Command, " m.CommandIndex=", m.CommandIndex)
 		if m.CommandValid == false {
 			// ignore other types of ApplyMsg
 		} else {
@@ -170,7 +173,7 @@ func (cfg *config) applier(i int, applyCh chan ApplyMsg) {
 				err_msg = fmt.Sprintf("server %v apply out of order %v", i, m.CommandIndex)
 			}
 			if err_msg != "" {
-				log.Fatalf("apply error: %v\n", err_msg)
+				log.Fatalf("1apply error: %v\n", err_msg)
 				cfg.applyErr[i] = err_msg
 				// keep reading after error so that Raft doesn't block
 				// holding locks...
@@ -210,7 +213,7 @@ func (cfg *config) applierSnap(i int, applyCh chan ApplyMsg) {
 				err_msg = fmt.Sprintf("server %v apply out of order %v", i, m.CommandIndex)
 			}
 			if err_msg != "" {
-				log.Fatalf("apply error: %v\n", err_msg)
+				log.Fatalf("2apply error: %v\n", err_msg)
 				cfg.applyErr[i] = err_msg
 				// keep reading after error so that Raft doesn't block
 				// holding locks...
@@ -330,7 +333,7 @@ func (cfg *config) connect(i int) {
 
 // detach server i from the net.
 func (cfg *config) disconnect(i int) {
-
+	fmt.Println("disconnect i=", i)
 	cfg.connected[i] = false
 
 	// outgoing ClientEnds
@@ -457,7 +460,9 @@ func (cfg *config) nCommitted(index int) (int, interface{}) {
 		cmd1, ok := cfg.logs[i][index]
 		cfg.mu.Unlock()
 
+		fmt.Println("i=", i, " ok=", ok)
 		if ok {
+			fmt.Println("count=", count, " cmd=", cmd, " cmd1=", cmd1)
 			if count > 0 && cmd != cmd1 {
 				cfg.t.Fatalf("committed values do not match: index %v, %v, %v\n",
 					index, cmd, cmd1)
@@ -543,7 +548,7 @@ func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 			t1 := time.Now()
 			for time.Since(t1).Seconds() < 2 {
 				nd, cmd1 := cfg.nCommitted(index)
-				fmt.Println("one nd=", nd, " cmd1=", cmd1)
+				fmt.Println("one nd=", nd, " cmd1=", cmd1, " expectedServers=", expectedServers)
 				if nd > 0 && nd >= expectedServers {
 					// committed
 					if cmd1 == cmd {
