@@ -141,8 +141,8 @@ func (cfg *config) checkLogs(i int, m ApplyMsg) (string, bool) {
 	err_msg := ""
 	v := m.Command
 	for j := 0; j < len(cfg.logs); j++ {
-		xx, yy := cfg.logs[j][m.CommandIndex]
-		fmt.Println("j=", j, " xx=", xx, " yy=", yy, " m.CommandIndex=", m.CommandIndex)
+		// xx, yy := cfg.logs[j][m.CommandIndex]
+		// fmt.Println("j=", j, " xx=", xx, " yy=", yy, " m.CommandIndex=", m.CommandIndex)
 		if old, oldok := cfg.logs[j][m.CommandIndex]; oldok && old != v {
 			log.Printf("%v: log %v; server %v\n", i, cfg.logs[i], cfg.logs[j])
 			// some server has already committed a different value for this entry!
@@ -162,7 +162,7 @@ func (cfg *config) checkLogs(i int, m ApplyMsg) (string, bool) {
 // contents
 func (cfg *config) applier(i int, applyCh chan ApplyMsg) {
 	for m := range applyCh {
-		fmt.Println("CommandValid=", m.CommandValid, " m.Command=", m.Command, " m.CommandIndex=", m.CommandIndex)
+		// fmt.Println("CommandValid=", m.CommandValid, " m.Command=", m.Command, " m.CommandIndex=", m.CommandIndex)
 		if m.CommandValid == false {
 			// ignore other types of ApplyMsg
 		} else {
@@ -310,7 +310,7 @@ func (cfg *config) cleanup() {
 
 // attach server i to the net.
 func (cfg *config) connect(i int) {
-	fmt.Printf("connect(%d)\n", i)
+	// fmt.Printf("connect(%d)\n", i)
 
 	cfg.connected[i] = true
 
@@ -333,7 +333,7 @@ func (cfg *config) connect(i int) {
 
 // detach server i from the net.
 func (cfg *config) disconnect(i int) {
-	fmt.Println("disconnect i=", i)
+	// fmt.Println("disconnect i=", i)
 	cfg.connected[i] = false
 
 	// outgoing ClientEnds
@@ -376,13 +376,11 @@ func (cfg *config) setlongreordering(longrel bool) {
 // check that there's exactly one leader.
 // try a few times in case re-elections are needed.
 func (cfg *config) checkOneLeader() int {
-	fmt.Println("checkOneLeader")
+	// fmt.Println("checkOneLeader")
 	for iters := 0; iters < 10; iters++ {
 
 		ms := 450 + (rand.Int63() % 100)
-		fmt.Println("checkOneLeader iters:", iters, " ms:", time.Duration(ms)*time.Millisecond)
 		time.Sleep(time.Duration(ms) * time.Millisecond)
-		fmt.Println("checkOneLeader sleep finish")
 
 		leaders := make(map[int][]int)
 		for i := 0; i < cfg.n; i++ {
@@ -390,11 +388,9 @@ func (cfg *config) checkOneLeader() int {
 				if term, leader := cfg.rafts[i].GetState(); leader {
 					leaders[term] = append(leaders[term], i)
 				}
-			} else {
-				fmt.Println("checkOneLeader: ", i, " is not connect")
 			}
 		}
-		fmt.Println("checkOneLeader leaderNum:", len(leaders))
+		// fmt.Println("checkOneLeader leaderNum:", len(leaders))
 
 		lastTermWithLeader := -1
 		for term, leaders := range leaders {
@@ -421,10 +417,10 @@ func (cfg *config) checkTerms() int {
 
 	for i := 0; i < cfg.n; i++ {
 		if cfg.connected[i] {
-			xterm, isleader := cfg.rafts[i].GetState()
-			if isleader == true {
-				fmt.Println(i, " is leader")
-			}
+			xterm, _ := cfg.rafts[i].GetState()
+			// if isleader == true {
+			// 	fmt.Println(i, " is leader")
+			// }
 			if term == -1 {
 				term = xterm
 			} else if term != xterm {
@@ -460,9 +456,9 @@ func (cfg *config) nCommitted(index int) (int, interface{}) {
 		cmd1, ok := cfg.logs[i][index]
 		cfg.mu.Unlock()
 
-		fmt.Println("i=", i, " ok=", ok)
+		// fmt.Println("i=", i, " ok=", ok)
 		if ok {
-			fmt.Println("count=", count, " cmd=", cmd, " cmd1=", cmd1)
+			// fmt.Println("count=", count, " cmd=", cmd, " cmd1=", cmd1)
 			if count > 0 && cmd != cmd1 {
 				cfg.t.Fatalf("committed values do not match: index %v, %v, %v\n",
 					index, cmd, cmd1)
@@ -532,9 +528,9 @@ func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 			}
 			cfg.mu.Unlock()
 			if rf != nil {
-				fmt.Printf("one before start rf.me=%v\n", rf.me)
+				// fmt.Printf("one before start rf.me=%v\n", rf.me)
 				index1, _, ok := rf.Start(cmd)
-				fmt.Printf("one index1=%v ok=%v\n", index1, ok)
+				// fmt.Printf("one index1=%v ok=%v\n", index1, ok)
 				if ok {
 					index = index1
 					break
@@ -548,7 +544,7 @@ func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 			t1 := time.Now()
 			for time.Since(t1).Seconds() < 2 {
 				nd, cmd1 := cfg.nCommitted(index)
-				fmt.Println("one nd=", nd, " cmd1=", cmd1, " expectedServers=", expectedServers)
+				// fmt.Println("one nd=", nd, " cmd1=", cmd1, " expectedServers=", expectedServers)
 				if nd > 0 && nd >= expectedServers {
 					// committed
 					if cmd1 == cmd {
