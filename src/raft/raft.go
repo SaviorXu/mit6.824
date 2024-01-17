@@ -255,9 +255,9 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 		rf.mu.Unlock()
 	} else {
 		rf.mu.Unlock()
-		DPrintf("sendAppendEntries args:args.LeaderId=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, server, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
+		DPrintf("sendAppendEntries args1:args.LeaderId=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, server, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
 		ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
-		DPrintf("sendAppendEntries reply: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
+		DPrintf("sendAppendEntries reply1: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
 		if ok {
 			rf.mu.Lock()
 			if reply.Term > rf.currentTerm {
@@ -266,45 +266,47 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 			} else {
 				rf.mu.Unlock()
 			}
-			if len(args.Entries) > 0 {
-				//lastLogIndex不能为rf.log[len(rf.log)]-1。因此此时可能又往rf.log添加日志
-				lastLogIndex := args.Entries[len(args.Entries)-1].Index
-				for ok == true && reply.Success == false {
-					rf.mu.Lock()
-					if rf.state != stateLeader {
-						rf.mu.Unlock()
-						break
-					}
-					if rf.nextIndex[server] > 1 {
-						rf.nextIndex[server] -= 1
-					}
-					idx := rf.nextIndex[server] - 1
-					args.PrevLogIndex = rf.log[idx].Index
-					args.PrevLogTerm = rf.log[idx].Term
-					EntriesLen := lastLogIndex - rf.nextIndex[server] + 1
-					args.Entries = make([]LogEntry, EntriesLen)
-					args.Term = rf.currentTerm
-					args.LeaderCommit = rf.commitIndex
-					copy(args.Entries, rf.log[rf.nextIndex[server]:lastLogIndex+1])
-					DPrintf("sendAppendEntries args:args.LeaderId=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, server, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
-					rf.mu.Unlock()
-					ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
-					rf.mu.Lock()
-					DPrintf("sendAppendEntries reply: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
-					if reply.Term > rf.currentTerm {
-						rf.mu.Unlock()
-						rf.stateMachine(newTerm, reply.Term)
-					} else {
-						rf.mu.Unlock()
-					}
-				}
-				rf.mu.Lock()
-				if reply.Success && rf.state == stateLeader {
-					rf.nextIndex[server] = lastLogIndex + 1
-					rf.matchIndex[server] = lastLogIndex
-				}
-				rf.mu.Unlock()
+			var endLogIndex int
+			if len(args.Entries) == 0 {
+				endLogIndex = args.PrevLogIndex
+			} else {
+				endLogIndex = args.Entries[len(args.Entries)-1].Index
 			}
+			for ok == true && reply.Success == false {
+				rf.mu.Lock()
+				if rf.state != stateLeader {
+					rf.mu.Unlock()
+					break
+				}
+				if rf.nextIndex[server] > 1 {
+					DPrintf("sendAppendEntries fail nextIndex-1:args.LeaderId=%v server=%v args.PrevLogIndex=%v args.PrevLogTerm=%v rf.getLastIdx=%v rf.getLastTerm=%v", args.LeaderId, server, args.PrevLogIndex, args.PrevLogTerm, rf.getLastLogIndex(), rf.getLastLogTerm())
+					rf.nextIndex[server] -= 1
+				}
+				args.PrevLogIndex = rf.log[endLogIndex].Index
+				args.PrevLogTerm = rf.log[endLogIndex].Term
+				EntriesLen := endLogIndex - rf.nextIndex[server] + 1
+				args.Entries = make([]LogEntry, EntriesLen)
+				args.Term = rf.currentTerm
+				args.LeaderCommit = rf.commitIndex
+				copy(args.Entries, rf.log[rf.nextIndex[server]:endLogIndex+1])
+				DPrintf("sendAppendEntries args2:args.LeaderId=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, server, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
+				rf.mu.Unlock()
+				ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
+				rf.mu.Lock()
+				DPrintf("sendAppendEntries reply2: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
+				if reply.Term > rf.currentTerm {
+					rf.mu.Unlock()
+					rf.stateMachine(newTerm, reply.Term)
+				} else {
+					rf.mu.Unlock()
+				}
+			}
+			rf.mu.Lock()
+			if reply.Success && rf.state == stateLeader {
+				rf.nextIndex[server] = endLogIndex + 1
+				rf.matchIndex[server] = endLogIndex
+			}
+			rf.mu.Unlock()
 		}
 	}
 	return ok
