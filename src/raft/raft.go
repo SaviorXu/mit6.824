@@ -20,7 +20,6 @@ package raft
 import (
 	//	"bytes"
 	"bytes"
-	"fmt"
 	"math/rand"
 	"sync"
 	"sync/atomic"
@@ -294,11 +293,14 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 				ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
 				rf.mu.Lock()
 				DPrintf("sendAppendEntries reply2: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
-				if reply.Term > rf.currentTerm {
-					rf.mu.Unlock()
-					rf.stateMachine(newTerm, reply.Term)
-				} else {
-					rf.mu.Unlock()
+				//必须检测ok是否为true，否则有可能是上次的reply。因为reply变量没有重新创建
+				if ok {
+					if reply.Term > rf.currentTerm {
+						rf.mu.Unlock()
+						rf.stateMachine(newTerm, reply.Term)
+					} else {
+						rf.mu.Unlock()
+					}
 				}
 			}
 			rf.mu.Lock()
@@ -410,6 +412,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	rf.log = append(rf.log, args.Entries...)
 	reply.Success = true
 	reply.Term = rf.currentTerm
+	rf.nextIndex[rf.me] = rf.getLastLogIndex() + 1
 	rf.electionTimer.Reset(GetElectionTime())
 
 	DPrintf("AppendEntries apply args.LeaderCommit=%v rf.commitIndex=%v\n", args.LeaderCommit, rf.commitIndex)
@@ -459,7 +462,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 		logEntry := LogEntry{index, term, command}
 		rf.log = append(rf.log, logEntry)
 		rf.nextIndex[rf.me] = rf.getLastLogIndex() + 1
-		DPrintf("Start rf.me=%v rf.state=%v cmd=%v\n", rf.me, rf.state, command)
+		DPrintf("Start rf.me=%v rf.state=%v cmd=%v len(rf.log)=%v\n", rf.me, rf.state, command, len(rf.log))
 	}
 	rf.mu.Unlock()
 	return index, term, isLeader
@@ -535,9 +538,9 @@ func (rf *Raft) startElect() {
 
 func (rf *Raft) stateMachine(state int, term interface{}) {
 	rf.mu.Lock()
-	fmt.Println("rf.me=", rf.me, " rf.currentTerm=", rf.currentTerm, " rf.state=", rf.state, " len(rf.log)=", len(rf.log), " rf.commitIndex=", rf.commitIndex)
+	DPrintf("rf.me=%v rf.currentTerm=%v rf.state=%v len(rf.log)=%v rf.commitIndex=%v", rf.me, rf.currentTerm, rf.state, len(rf.log), rf.commitIndex)
 	for i := 0; i < len(rf.log); i++ {
-		fmt.Println("stateMachine rf.Index=", rf.log[i].Index, " rf.Term=", rf.log[i].Term, " rf.Coomand=", rf.log[i].Command)
+		DPrintf("stateMachine rf.Index=%v rf.Term=%v rf.Command=%v", rf.log[i].Index, rf.log[i].Term, rf.log[i].Command)
 	}
 	rf.mu.Unlock()
 	if state == newTerm {
@@ -630,7 +633,7 @@ func (rf *Raft) ticker() {
 // for any long-running work.
 func Make(peers []*labrpc.ClientEnd, me int,
 	persister *Persister, applyCh chan ApplyMsg) *Raft {
-	fmt.Println("Raft start...")
+	DPrintf("Raft start...")
 	rf := &Raft{
 		peers:          peers,
 		persister:      persister,
@@ -660,7 +663,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 		rf.matchIndex[i] = 0
 	}
 
-	fmt.Println("raft term is ", rf.currentTerm)
+	DPrintf("raft term is %v", rf.currentTerm)
 	// start ticker goroutine to start elections
 	go rf.ticker()
 
