@@ -58,14 +58,14 @@ type LogEntry struct {
 	Command interface{}
 }
 
-//描述机器此时处于什么状态
+// 描述机器此时处于什么状态
 const (
 	stateFollower  = 0
 	stateCandidate = 1
 	stateLeader    = 2
 )
 
-//描述机器的状态转换事件
+// 描述机器的状态转换事件
 const (
 	heartBeat    = 0
 	electTimeOut = 1
@@ -255,54 +255,56 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 		rf.mu.Unlock()
 	} else {
 		rf.mu.Unlock()
-		// DPrintf("sendAppendEntries args:args.LeaderId=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, server, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
+		DPrintf("sendAppendEntries args:args.LeaderId=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, server, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
 		ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
-		// DPrintf("sendAppendEntries reply: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
-		if ok && len(args.Entries) > 0 {
+		DPrintf("sendAppendEntries reply: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
+		if ok {
 			rf.mu.Lock()
-			//lastLogIndex不能为rf.log[len(rf.log)]-1。因此此时可能又往rf.log添加日志
-			lastLogIndex := args.Entries[len(args.Entries)-1].Index
 			if reply.Term > rf.currentTerm {
 				rf.mu.Unlock()
 				rf.stateMachine(newTerm, reply.Term)
 			} else {
 				rf.mu.Unlock()
 			}
-			for ok == true && reply.Success == false {
-				rf.mu.Lock()
-				if rf.state != stateLeader {
+			if len(args.Entries) > 0 {
+				//lastLogIndex不能为rf.log[len(rf.log)]-1。因此此时可能又往rf.log添加日志
+				lastLogIndex := args.Entries[len(args.Entries)-1].Index
+				for ok == true && reply.Success == false {
+					rf.mu.Lock()
+					if rf.state != stateLeader {
+						rf.mu.Unlock()
+						break
+					}
+					if rf.nextIndex[server] > 1 {
+						rf.nextIndex[server] -= 1
+					}
+					idx := rf.nextIndex[server] - 1
+					args.PrevLogIndex = rf.log[idx].Index
+					args.PrevLogTerm = rf.log[idx].Term
+					EntriesLen := lastLogIndex - rf.nextIndex[server] + 1
+					args.Entries = make([]LogEntry, EntriesLen)
+					args.Term = rf.currentTerm
+					args.LeaderCommit = rf.commitIndex
+					copy(args.Entries, rf.log[rf.nextIndex[server]:lastLogIndex+1])
+					DPrintf("sendAppendEntries args:args.LeaderId=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, server, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
 					rf.mu.Unlock()
-					break
+					ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
+					rf.mu.Lock()
+					DPrintf("sendAppendEntries reply: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
+					if reply.Term > rf.currentTerm {
+						rf.mu.Unlock()
+						rf.stateMachine(newTerm, reply.Term)
+					} else {
+						rf.mu.Unlock()
+					}
 				}
-				if rf.nextIndex[server] > 1 {
-					rf.nextIndex[server] -= 1
+				rf.mu.Lock()
+				if reply.Success && rf.state == stateLeader {
+					rf.nextIndex[server] = lastLogIndex + 1
+					rf.matchIndex[server] = lastLogIndex
 				}
-				idx := rf.nextIndex[server] - 1
-				args.PrevLogIndex = rf.log[idx].Index
-				args.PrevLogTerm = rf.log[idx].Term
-				EntriesLen := lastLogIndex - rf.nextIndex[server] + 1
-				args.Entries = make([]LogEntry, EntriesLen)
-				args.Term = rf.currentTerm
-				args.LeaderCommit = rf.commitIndex
-				copy(args.Entries, rf.log[rf.nextIndex[server]:lastLogIndex+1])
-				// DPrintf("sendAppendEntries args:args.LeaderId=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, server, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
 				rf.mu.Unlock()
-				ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
-				rf.mu.Lock()
-				// DPrintf("sendAppendEntries reply: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
-				if reply.Term > rf.currentTerm {
-					rf.mu.Unlock()
-					rf.stateMachine(newTerm, reply.Term)
-				} else {
-					rf.mu.Unlock()
-				}
 			}
-			rf.mu.Lock()
-			if reply.Success && rf.state == stateLeader {
-				rf.nextIndex[server] = lastLogIndex + 1
-				rf.matchIndex[server] = lastLogIndex
-			}
-			rf.mu.Unlock()
 		}
 	}
 	return ok
@@ -334,7 +336,7 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 			}
 		} else {
 			rf.mu.Lock()
-			// DPrintf("RequestVote Call error: from Peer%v Term%v to %v \n", rf.me, rf.currentTerm, server)
+			DPrintf("RequestVote Call error: from Peer%v Term%v to %v \n", rf.me, rf.currentTerm, server)
 			rf.mu.Unlock()
 		}
 	}
@@ -355,8 +357,8 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	}
 
 	rf.mu.Lock()
-	// DPrintf("RequestVote args:Term=%v CandidateId=%v LastLogIndex=%v LastLogTerm=%v\n", args.Term, args.CandidateId, args.LastLogIndex, args.LastLogTerm)
-	// DPrintf("RequestVote :[rf.me %v Term%v] rf.votedFor:%v rf.LastLogIndex=%v rf.LastLogTerm=%v\n", rf.me, rf.currentTerm, rf.votedFor, rf.getLastLogIndex(), rf.getLastLogTerm())
+	DPrintf("RequestVote args:Term=%v CandidateId=%v LastLogIndex=%v LastLogTerm=%v\n", args.Term, args.CandidateId, args.LastLogIndex, args.LastLogTerm)
+	DPrintf("RequestVote :[rf.me %v Term%v] rf.votedFor:%v rf.LastLogIndex=%v rf.LastLogTerm=%v\n", rf.me, rf.currentTerm, rf.votedFor, rf.getLastLogIndex(), rf.getLastLogTerm())
 	if args.Term < rf.currentTerm || rf.votedFor != -1 {
 		//任期比自己小 ， 该任期票已投
 		reply.VoteGranted = false
@@ -374,7 +376,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 			rf.electionTimer.Reset(GetElectionTime())
 		}
 	}
-	// DPrintf("RequestVote :[rf.me %v Term%v] RequestVote.args term %v,candidateId %v | reply term %v granted %v\n", rf.me, rf.currentTerm, args.Term, args.CandidateId, reply.Term, reply.VoteGranted)
+	DPrintf("RequestVote :[rf.me %v Term%v] RequestVote.args term %v,candidateId %v | reply term %v granted %v\n", rf.me, rf.currentTerm, args.Term, args.CandidateId, reply.Term, reply.VoteGranted)
 	rf.mu.Unlock()
 }
 
@@ -391,12 +393,12 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	reply.Term = rf.currentTerm
 	reply.Success = false
 	if args.Term < rf.currentTerm {
-		// DPrintf("AppendEntries apply fail args.PrevLogIndex=%v args.PrevLogTerm=%v\n", args.PrevLogIndex, args.PrevLogTerm)
+		DPrintf("AppendEntries apply fail args.PrevLogIndex=%v args.PrevLogTerm=%v\n", args.PrevLogIndex, args.PrevLogTerm)
 		rf.mu.Unlock()
 		return
 	}
 	if args.PrevLogIndex > rf.getLastLogIndex() || args.PrevLogTerm != rf.log[args.PrevLogIndex].Term {
-		// DPrintf("AppendEntries apply fail args.PrevLogIndex=%v args.PrevLogTerm=%v\n", args.PrevLogIndex, args.PrevLogTerm)
+		DPrintf("AppendEntries apply fail args.PrevLogIndex=%v args.PrevLogTerm=%v\n", args.PrevLogIndex, args.PrevLogTerm)
 		rf.mu.Unlock()
 		return
 	}
@@ -408,7 +410,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	reply.Term = rf.currentTerm
 	rf.electionTimer.Reset(GetElectionTime())
 
-	// DPrintf("AppendEntries apply args.LeaderCommit=%v rf.commitIndex=%v\n", args.LeaderCommit, rf.commitIndex)
+	DPrintf("AppendEntries apply args.LeaderCommit=%v rf.commitIndex=%v\n", args.LeaderCommit, rf.commitIndex)
 	if args.LeaderCommit > rf.commitIndex {
 		var tmpLastIndex int
 		if args.LeaderCommit > rf.getLastLogIndex() {
@@ -422,12 +424,12 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 				Command:      rf.log[j].Command,
 				CommandIndex: rf.log[j].Index,
 			}
-			// DPrintf("AppendEntries apply j=%v\n", j)
+			DPrintf("AppendEntries apply j=%v\n", j)
 			rf.applyCh <- applyMsg
 		}
 		rf.commitIndex = tmpLastIndex
 	}
-	// DPrintf("AppendEntries finish rf.me=%v reply.Suceess=%v len(rf.log)=%v rf.commitIndex=%v\n", rf.me, reply.Success, len(rf.log), rf.commitIndex)
+	DPrintf("AppendEntries finish rf.me=%v reply.Suceess=%v len(rf.log)=%v rf.commitIndex=%v\n", rf.me, reply.Success, len(rf.log), rf.commitIndex)
 	rf.mu.Unlock()
 }
 
@@ -455,7 +457,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 		logEntry := LogEntry{index, term, command}
 		rf.log = append(rf.log, logEntry)
 		rf.nextIndex[rf.me] = rf.getLastLogIndex() + 1
-		// DPrintf("Start rf.me=%v rf.state=%v cmd=%v\n", rf.me, rf.state, command)
+		DPrintf("Start rf.me=%v rf.state=%v cmd=%v\n", rf.me, rf.state, command)
 	}
 	rf.mu.Unlock()
 	return index, term, isLeader
@@ -490,10 +492,10 @@ func (rf *Raft) getLastLogTerm() int {
 
 func (rf *Raft) broadCastHeartBeat() {
 	rf.mu.Lock()
-	// DPrintf("rf.me=%v will broadCast", rf.me)
-	// for i := 0; i < len(rf.peers); i++ {
-	// 	DPrintf("i=%v rf.nextIndex=%v", i, rf.nextIndex[i])
-	// }
+	DPrintf("rf.me=%v will broadCast", rf.me)
+	for i := 0; i < len(rf.peers); i++ {
+		DPrintf("i=%v rf.nextIndex=%v", i, rf.nextIndex[i])
+	}
 	rf.mu.Unlock()
 	for i := 0; i < len(rf.peers); i++ {
 		rf.mu.Lock()
@@ -530,15 +532,15 @@ func (rf *Raft) startElect() {
 }
 
 func (rf *Raft) stateMachine(state int, term interface{}) {
-	// rf.mu.Lock()
-	// fmt.Println("rf.me=", rf.me, " rf.state=", rf.state, " len(rf.log)=", len(rf.log), " rf.commitIndex=", rf.commitIndex)
-	// for i := 0; i < len(rf.log); i++ {
-	// 	fmt.Println("stateMachine rf.Index=", rf.log[i].Index, " rf.Term=", rf.log[i].Term, " rf.Coomand=", rf.log[i].Command)
-	// }
-	// rf.mu.Unlock()
+	rf.mu.Lock()
+	fmt.Println("rf.me=", rf.me, " rf.currentTerm=", rf.currentTerm, " rf.state=", rf.state, " len(rf.log)=", len(rf.log), " rf.commitIndex=", rf.commitIndex)
+	for i := 0; i < len(rf.log); i++ {
+		fmt.Println("stateMachine rf.Index=", rf.log[i].Index, " rf.Term=", rf.log[i].Term, " rf.Coomand=", rf.log[i].Command)
+	}
+	rf.mu.Unlock()
 	if state == newTerm {
 		rf.mu.Lock()
-		// DPrintf("stateMachine state=newTerm :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+		DPrintf("stateMachine state=newTerm :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
 		rf.currentTerm = term.(int)
 		rf.state = stateFollower
 		rf.voteSum = 0
@@ -553,7 +555,7 @@ func (rf *Raft) stateMachine(state int, term interface{}) {
 	case stateFollower:
 		if state == electTimeOut {
 			rf.mu.Lock()
-			// DPrintf("stateMachine state=electTimeOut :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+			DPrintf("stateMachine state=electTimeOut :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
 			rf.currentTerm += 1
 			rf.state = stateCandidate
 			rf.votedFor = rf.me
@@ -566,7 +568,7 @@ func (rf *Raft) stateMachine(state int, term interface{}) {
 			rf.startElect()
 		} else if state == electSucc {
 			rf.mu.Lock()
-			// DPrintf("stateMachine state=electSucc :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+			DPrintf("stateMachine state=electSucc :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
 			rf.state = stateLeader
 			for i := 0; i < len(rf.peers); i++ {
 				rf.nextIndex[i] = rf.getLastLogIndex() + 1
@@ -575,7 +577,7 @@ func (rf *Raft) stateMachine(state int, term interface{}) {
 			rf.mu.Unlock()
 		} else if state == electTimeOut {
 			rf.mu.Lock()
-			// DPrintf("stateMachine state=electTimeOut :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+			DPrintf("stateMachine state=electTimeOut :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
 			rf.currentTerm += 1
 			rf.state = stateCandidate
 			rf.votedFor = rf.me
@@ -586,7 +588,7 @@ func (rf *Raft) stateMachine(state int, term interface{}) {
 	case stateLeader:
 		if state == heartBeat {
 			rf.mu.Lock()
-			// DPrintf("stateMachine state=heartBeat :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
+			DPrintf("stateMachine state=heartBeat :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
 			rf.mu.Unlock()
 			rf.broadCastHeartBeat()
 		}
