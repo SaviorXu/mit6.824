@@ -137,13 +137,13 @@ type AppendEntriesReply struct {
 }
 
 func GetHeartBeatTime() time.Duration {
-	heartBeatTimeOut := rand.Intn(100) + 100
+	heartBeatTimeOut := rand.Intn(50) + 100
 	heartBeatTime := time.Millisecond * time.Duration(heartBeatTimeOut)
 	return heartBeatTime
 }
 
 func GetElectionTime() time.Duration {
-	electTimeOut := rand.Intn(200) + 200
+	electTimeOut := rand.Intn(150) + 150
 	elecTime := time.Millisecond * time.Duration(electTimeOut)
 	return elecTime
 }
@@ -214,7 +214,7 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 	ok := false
 	rf.mu.Lock()
 	if server == rf.me && rf.state == stateLeader {
-		//检查日志是否复制成功，若成功，则提交日志
+		//若为领导者，则不用给自己发送AppendEntries。只需要检查是否需要提交。查看每个server的nextIndex，获得每个server已经拥有的日志，若超过半数，则提交。
 		leaderCommitIndex := 0
 		leaderLastLogIndex := rf.log[len(rf.log)-1].Index
 		for i := rf.commitIndex + 1; i <= leaderLastLogIndex; i++ {
@@ -265,6 +265,7 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 			} else {
 				rf.mu.Unlock()
 			}
+			//若发送失败，则会逐渐递减nextIndex。直到和server的prevTerm和prevIndex一致。
 			var endLogIndex int
 			if len(args.Entries) == 0 {
 				endLogIndex = args.PrevLogIndex
@@ -281,8 +282,8 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 					DPrintf("sendAppendEntries fail nextIndex-1:args.LeaderId=%v server=%v args.PrevLogIndex=%v args.PrevLogTerm=%v rf.getLastIdx=%v rf.getLastTerm=%v", args.LeaderId, server, args.PrevLogIndex, args.PrevLogTerm, rf.getLastLogIndex(), rf.getLastLogTerm())
 					rf.nextIndex[server] -= 1
 				}
-				args.PrevLogIndex = rf.log[endLogIndex].Index
-				args.PrevLogTerm = rf.log[endLogIndex].Term
+				args.PrevLogIndex = rf.log[rf.nextIndex[server]-1].Index
+				args.PrevLogTerm = rf.log[rf.nextIndex[server]-1].Term
 				EntriesLen := endLogIndex - rf.nextIndex[server] + 1
 				args.Entries = make([]LogEntry, EntriesLen)
 				args.Term = rf.currentTerm
