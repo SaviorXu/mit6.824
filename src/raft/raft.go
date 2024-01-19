@@ -254,7 +254,6 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 		rf.mu.Unlock()
 	} else {
 		rf.mu.Unlock()
-		DPrintf("sendAppendEntries args1:args.LeaderId=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, server, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
 		ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
 		DPrintf("sendAppendEntries reply1: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
 		if ok {
@@ -502,23 +501,29 @@ func (rf *Raft) broadCastHeartBeat() {
 	for i := 0; i < len(rf.peers); i++ {
 		DPrintf("i=%v rf.nextIndex=%v", i, rf.nextIndex[i])
 	}
+	state := rf.state
 	rf.mu.Unlock()
-	for i := 0; i < len(rf.peers); i++ {
-		rf.mu.Lock()
-		var reply AppendEntriesReply
-		args := AppendEntriesArgs{
-			Term:         rf.currentTerm,
-			LeaderId:     rf.me,
-			LeaderCommit: rf.commitIndex,
+	//可能会出现此时刚好不是leader，但是却发送了消息
+	if state == stateLeader {
+		for i := 0; i < len(rf.peers); i++ {
+			rf.mu.Lock()
+			var reply AppendEntriesReply
+			args := AppendEntriesArgs{
+				Term:         rf.currentTerm,
+				LeaderId:     rf.me,
+				LeaderCommit: rf.commitIndex,
+			}
+			idx := rf.nextIndex[i] - 1
+			args.PrevLogIndex = rf.log[idx].Index
+			args.PrevLogTerm = rf.log[idx].Term
+			args.Entries = make([]LogEntry, rf.getLastLogIndex()+1-rf.nextIndex[i])
+			copy(args.Entries, rf.log[rf.nextIndex[i]:rf.getLastLogIndex()+1])
+			DPrintf("sendAppendEntries args1:args.LeaderId=%v rf.currentTerm=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, rf.currentTerm, i, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
+			rf.mu.Unlock()
+			go rf.sendAppendEntries(i, &args, &reply)
 		}
-		idx := rf.nextIndex[i] - 1
-		args.PrevLogIndex = rf.log[idx].Index
-		args.PrevLogTerm = rf.log[idx].Term
-		args.Entries = make([]LogEntry, rf.getLastLogIndex()+1-rf.nextIndex[i])
-		copy(args.Entries, rf.log[rf.nextIndex[i]:rf.getLastLogIndex()+1])
-		rf.mu.Unlock()
-		go rf.sendAppendEntries(i, &args, &reply)
 	}
+
 }
 
 func (rf *Raft) startElect() {
@@ -531,10 +536,16 @@ func (rf *Raft) startElect() {
 	}
 	rf.mu.Unlock()
 
-	for i := 0; i < len(rf.peers); i++ {
-		var requestVoteReply RequestVoteReply
-		go rf.sendRequestVote(i, &requestVoteArgs, &requestVoteReply)
+	rf.mu.Lock()
+	state := rf.state
+	rf.mu.Unlock()
+	if state == stateCandidate {
+		for i := 0; i < len(rf.peers); i++ {
+			var requestVoteReply RequestVoteReply
+			go rf.sendRequestVote(i, &requestVoteArgs, &requestVoteReply)
+		}
 	}
+
 }
 
 func (rf *Raft) stateMachine(state int, term interface{}) {
