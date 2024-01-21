@@ -7,7 +7,7 @@ while true;do
     if [ $((num)) -eq 0 ]; then
         tmp=$((count/5))
         file="${file_prefix}2B_${tmp}.txt"
-        if [ $((tmp)) -gt 60 ];then 
+        if [ $((tmp)) -gt 100 ];then 
             break
         fi
     fi
