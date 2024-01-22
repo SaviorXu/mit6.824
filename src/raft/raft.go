@@ -104,7 +104,6 @@ type Raft struct {
 // field names must start with capital letters!
 // follower变成candidate，发起投票
 type RequestVoteArgs struct {
-	// Your data here (2A, 2B).
 	Term         int //任期号
 	CandidateId  int //候选者id
 	LastLogIndex int //上一个日志的索引号
@@ -115,7 +114,6 @@ type RequestVoteArgs struct {
 // field names must start with capital letters!
 // follower回复candidate。回复投票结果
 type RequestVoteReply struct {
-	// Your data here (2A).
 	Term        int  //任期号
 	VoteGranted bool //是否投票
 }
@@ -151,7 +149,6 @@ func (rf *Raft) GetState() (int, bool) {
 
 	var term int
 	var isleader bool
-	// Your code here (2A).
 	rf.mu.Lock()
 	term = rf.currentTerm
 	isleader = false
@@ -186,6 +183,7 @@ func (rf *Raft) readPersist(data []byte) {
 	d.Decode(&rf.currentTerm)
 	d.Decode(&rf.votedFor)
 	d.Decode(&rf.log)
+	DPrintf("readPersist rf.me=%v rf.currentTerm=%v rf.votedFor=%v", rf.me, rf.currentTerm, rf.votedFor)
 	rf.mu.Unlock()
 }
 
@@ -268,7 +266,7 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 		copy(args.Entries, rf.log[rf.nextIndex[server]:rf.getLastLogIndex()+1])
 		rf.mu.Unlock()
 		ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
-		DPrintf("sendAppendEntries reply1: rf.me=%v send to server=%v ok=%v reply.success=%v reply.Term=%v args.PreIdx=%v args.Term=%v args.commit=%v", rf.me, server, ok, reply.Success, reply.Term, args.PrevLogIndex, args.PrevLogTerm, args.LeaderCommit)
+		DPrintf("sendAppendEntries reply1: rf.me=%v send to server=%v len(args.Entries)=%v ok=%v reply.success=%v reply.Term=%v args.PreIdx=%v args.Term=%v args.commit=%v", rf.me, server, len(args.Entries), ok, reply.Success, reply.Term, args.PrevLogIndex, args.PrevLogTerm, args.LeaderCommit)
 		if ok {
 			rf.mu.Lock()
 			if reply.Term > rf.currentTerm {
@@ -276,6 +274,7 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 				rf.state = stateFollower
 				rf.voteSum = 0
 				rf.votedFor = -1
+				rf.persist()
 			}
 			rf.mu.Unlock()
 			//若发送失败，则会逐渐递减nextIndex。直到和server的prevTerm和prevIndex一致。
@@ -297,6 +296,7 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 				args.PrevLogIndex = rf.log[rf.nextIndex[server]-1].Index
 				args.PrevLogTerm = rf.log[rf.nextIndex[server]-1].Term
 				EntriesLen := endLogIndex - rf.nextIndex[server] + 1
+				DPrintf("entrieslen=%v endLogIndex=%v rf.nextIndex[server]=%v", EntriesLen, endLogIndex, rf.nextIndex[server])
 				args.Entries = make([]LogEntry, EntriesLen)
 				args.Term = rf.currentTerm
 				args.LeaderCommit = rf.commitIndex
@@ -314,6 +314,7 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 						rf.state = stateFollower
 						rf.voteSum = 0
 						rf.votedFor = -1
+						rf.persist()
 					}
 				}
 				rf.mu.Unlock()
@@ -356,6 +357,7 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 					rf.state = stateFollower
 					rf.voteSum = 0
 					rf.votedFor = -1
+					rf.persist()
 				} else {
 					if rf.state == stateCandidate {
 						if reply.VoteGranted {
@@ -390,6 +392,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		rf.state = stateFollower
 		rf.voteSum = 0
 		rf.votedFor = -1
+		rf.persist()
 	}
 
 	DPrintf("RequestVote candidate:[id=%v,term=%v,Lastindex=%v,Lastterm=%v] my[id=%v,term=%v,voteFor=%v,lastindex=%v,lastterm=%v]\n", args.CandidateId, args.Term, args.LastLogIndex, args.LastLogTerm, rf.me, rf.currentTerm, rf.votedFor, rf.getLastLogIndex(), rf.getLastLogTerm())
@@ -407,6 +410,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 			reply.Term = rf.currentTerm
 			reply.VoteGranted = true
 			rf.votedFor = args.CandidateId
+			rf.persist()
 			rf.electionTimer.Reset(GetElectionTime())
 		}
 	}
@@ -421,6 +425,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		rf.state = stateFollower
 		rf.voteSum = 0
 		rf.votedFor = -1
+		rf.persist()
 	}
 
 	reply.Term = rf.currentTerm
@@ -453,6 +458,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	reply.Success = true
 	rf.nextIndex[rf.me] = rf.getLastLogIndex() + 1
 	rf.electionTimer.Reset(GetElectionTime())
+	rf.persist()
 
 	// rf.log = rf.log[:args.PrevLogIndex+1]
 	// rf.log = append(rf.log, args.Entries...)
@@ -508,7 +514,9 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 		logEntry := LogEntry{index, term, command}
 		rf.log = append(rf.log, logEntry)
 		rf.nextIndex[rf.me] = rf.getLastLogIndex() + 1
+		rf.persist()
 		DPrintf("Start rf.me=%v rf.state=%v cmd=%v len(rf.log)=%v\n", rf.me, rf.state, command, len(rf.log))
+		rf.mu.Unlock()
 		for i := 0; i < len(rf.peers); i++ {
 			if i != rf.me {
 				var args AppendEntriesArgs
@@ -516,8 +524,9 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 				go rf.sendAppendEntries(i, &args, &reply)
 			}
 		}
+	} else {
+		rf.mu.Unlock()
 	}
-	rf.mu.Unlock()
 	return index, term, isLeader
 }
 
@@ -568,6 +577,7 @@ func (rf *Raft) stateMachine(state int) {
 			rf.state = stateCandidate
 			rf.votedFor = rf.me
 			rf.voteSum = 1
+			rf.persist()
 			rf.mu.Unlock()
 			rf.stateMachine(electReady)
 		}
@@ -585,6 +595,7 @@ func (rf *Raft) stateMachine(state int) {
 			rf.state = stateCandidate
 			rf.votedFor = rf.me
 			rf.voteSum = 1
+			rf.persist()
 			rf.mu.Unlock()
 			rf.stateMachine(electReady)
 		}
