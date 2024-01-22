@@ -255,64 +255,80 @@ func (rf *Raft) leaderCommit() {
 }
 
 func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *AppendEntriesReply) bool {
-	ok := rf.peers[server].Call("Raft.AppendEntries", args, reply)
-	DPrintf("sendAppendEntries reply1: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
-	if ok {
-		rf.mu.Lock()
-		if reply.Term > rf.currentTerm {
-			rf.currentTerm = reply.Term
-			rf.state = stateFollower
-			rf.voteSum = 0
-			rf.votedFor = -1
-		}
+	ok := true
+	rf.mu.Lock()
+	if rf.state == stateLeader {
+		args.Term = rf.currentTerm
+		args.LeaderId = rf.me
+		args.LeaderCommit = rf.commitIndex
+		idx := rf.nextIndex[server] - 1
+		args.PrevLogIndex = rf.log[idx].Index
+		args.PrevLogTerm = rf.log[idx].Term
+		args.Entries = make([]LogEntry, rf.getLastLogIndex()+1-rf.nextIndex[server])
+		copy(args.Entries, rf.log[rf.nextIndex[server]:rf.getLastLogIndex()+1])
 		rf.mu.Unlock()
-		//若发送失败，则会逐渐递减nextIndex。直到和server的prevTerm和prevIndex一致。
-		var endLogIndex int
-		if len(args.Entries) == 0 {
-			endLogIndex = args.PrevLogIndex
-		} else {
-			endLogIndex = args.Entries[len(args.Entries)-1].Index
-		}
-		for ok == true && reply.Success == false {
+		ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
+		DPrintf("sendAppendEntries reply1: rf.me=%v send to server=%v ok=%v reply.success=%v reply.Term=%v args.PreIdx=%v args.Term=%v args.commit=%v", rf.me, server, ok, reply.Success, reply.Term, args.PrevLogIndex, args.PrevLogTerm, args.LeaderCommit)
+		if ok {
 			rf.mu.Lock()
-			if rf.state != stateLeader {
-				rf.mu.Unlock()
-				break
+			if reply.Term > rf.currentTerm {
+				rf.currentTerm = reply.Term
+				rf.state = stateFollower
+				rf.voteSum = 0
+				rf.votedFor = -1
 			}
-			if rf.nextIndex[server] > 1 {
-				DPrintf("sendAppendEntries fail nextIndex-1:args.LeaderId=%v server=%v args.PrevLogIndex=%v args.PrevLogTerm=%v rf.getLastIdx=%v rf.getLastTerm=%v", args.LeaderId, server, args.PrevLogIndex, args.PrevLogTerm, rf.getLastLogIndex(), rf.getLastLogTerm())
-				rf.nextIndex[server] -= 1
-			}
-			args.PrevLogIndex = rf.log[rf.nextIndex[server]-1].Index
-			args.PrevLogTerm = rf.log[rf.nextIndex[server]-1].Term
-			EntriesLen := endLogIndex - rf.nextIndex[server] + 1
-			args.Entries = make([]LogEntry, EntriesLen)
-			args.Term = rf.currentTerm
-			args.LeaderCommit = rf.commitIndex
-			copy(args.Entries, rf.log[rf.nextIndex[server]:endLogIndex+1])
-			DPrintf("sendAppendEntries args2:args.LeaderId=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, server, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
 			rf.mu.Unlock()
-			ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
-			rf.mu.Lock()
-			DPrintf("sendAppendEntries reply2: rf.me=%v server=%v ok=%v reply.term=%v reply.success=%v", rf.me, server, ok, reply.Term, reply.Success)
-			//必须检测ok是否为true，否则有可能是上次的reply。因为reply变量没有重新创建
-			if ok {
-				if reply.Term > rf.currentTerm {
-					rf.currentTerm = reply.Term
-					rf.state = stateFollower
-					rf.voteSum = 0
-					rf.votedFor = -1
+			//若发送失败，则会逐渐递减nextIndex。直到和server的prevTerm和prevIndex一致。
+			var endLogIndex int
+			if len(args.Entries) == 0 {
+				endLogIndex = args.PrevLogIndex
+			} else {
+				endLogIndex = args.Entries[len(args.Entries)-1].Index
+			}
+			for ok == true && reply.Success == false {
+				rf.mu.Lock()
+				if rf.state != stateLeader {
+					rf.mu.Unlock()
+					break
 				}
+				if rf.nextIndex[server] > 1 {
+					rf.nextIndex[server] -= 1
+				}
+				args.PrevLogIndex = rf.log[rf.nextIndex[server]-1].Index
+				args.PrevLogTerm = rf.log[rf.nextIndex[server]-1].Term
+				EntriesLen := endLogIndex - rf.nextIndex[server] + 1
+				args.Entries = make([]LogEntry, EntriesLen)
+				args.Term = rf.currentTerm
+				args.LeaderCommit = rf.commitIndex
+				args.LeaderId = rf.me
+				copy(args.Entries, rf.log[rf.nextIndex[server]:endLogIndex+1])
+				DPrintf("sendAppendEntries args2:args.LeaderId=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, server, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
+				rf.mu.Unlock()
+				ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
+				rf.mu.Lock()
+				DPrintf("sendAppendEntries reply2: rf.me=%v send to server=%v ok=%v reply.success=%v reply.Term=%v args.PreIdx=%v args.Term=%v args.commit=%v", rf.me, server, ok, reply.Success, reply.Term, args.PrevLogIndex, args.PrevLogTerm, args.LeaderCommit)
+				//必须检测ok是否为true，否则有可能是上次的reply。因为reply变量没有重新创建
+				if ok {
+					if reply.Term > rf.currentTerm {
+						rf.currentTerm = reply.Term
+						rf.state = stateFollower
+						rf.voteSum = 0
+						rf.votedFor = -1
+					}
+				}
+				rf.mu.Unlock()
+			}
+			rf.mu.Lock()
+			if reply.Success && rf.state == stateLeader {
+				rf.nextIndex[server] = endLogIndex + 1
+				rf.matchIndex[server] = endLogIndex
 			}
 			rf.mu.Unlock()
 		}
-		rf.mu.Lock()
-		if reply.Success && rf.state == stateLeader {
-			rf.nextIndex[server] = endLogIndex + 1
-			rf.matchIndex[server] = endLogIndex
-		}
+	} else {
 		rf.mu.Unlock()
 	}
+
 	return ok
 }
 
@@ -323,37 +339,44 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 		rf.electionTimer.Reset(GetElectionTime())
 		rf.mu.Unlock()
 	} else {
-		ok = rf.peers[server].Call("Raft.RequestVote", args, reply)
-		if ok {
-			rf.mu.Lock()
-			if reply.Term > rf.currentTerm {
-				rf.currentTerm = reply.Term
-				rf.state = stateFollower
-				rf.voteSum = 0
-				rf.votedFor = -1
-			} else {
-				if rf.state == stateCandidate {
-					if reply.VoteGranted {
-						rf.voteSum += 1
-					}
-					if rf.voteSum > len(rf.peers)/2 {
-						rf.state = stateLeader
-						for i := 0; i < len(rf.peers); i++ {
-							rf.nextIndex[i] = rf.getLastLogIndex() + 1
-							rf.matchIndex[i] = 0
+		rf.mu.Lock()
+		//当A,B,C三个机器。A先超时，B给A投票，A当选leader后，有一个request，之后C超时，当选leader，A的request就不能达到一致。
+		//原因是A当选为leader，就不会给C发送投票，如果rf.state=stateCandidate。C就不会重新设置超时选举定时器
+		if rf.state != stateFollower {
+			args.Term = rf.currentTerm
+			args.CandidateId = rf.me
+			args.LastLogIndex = rf.getLastLogIndex()
+			args.LastLogTerm = rf.getLastLogTerm()
+			rf.mu.Unlock()
+			ok = rf.peers[server].Call("Raft.RequestVote", args, reply)
+			if ok {
+				rf.mu.Lock()
+				if reply.Term > rf.currentTerm {
+					rf.currentTerm = reply.Term
+					rf.state = stateFollower
+					rf.voteSum = 0
+					rf.votedFor = -1
+				} else {
+					if rf.state == stateCandidate {
+						if reply.VoteGranted {
+							rf.voteSum += 1
 						}
-						DPrintf("%v become leader term=%v\n", rf.me, rf.currentTerm)
+						if rf.voteSum > len(rf.peers)/2 {
+							rf.state = stateLeader
+							for i := 0; i < len(rf.peers); i++ {
+								rf.nextIndex[i] = rf.getLastLogIndex() + 1
+								rf.matchIndex[i] = 0
+							}
+							DPrintf("%v become leader term=%v\n", rf.me, rf.currentTerm)
+						}
 					}
 				}
+				rf.mu.Unlock()
 			}
-			rf.mu.Unlock()
 		} else {
-			rf.mu.Lock()
-			DPrintf("RequestVote Call error: from Peer%v Term%v to %v \n", rf.me, rf.currentTerm, server)
 			rf.mu.Unlock()
 		}
 	}
-
 	return ok
 }
 
@@ -369,8 +392,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		rf.votedFor = -1
 	}
 
-	DPrintf("RequestVote args:Term=%v CandidateId=%v LastLogIndex=%v LastLogTerm=%v\n", args.Term, args.CandidateId, args.LastLogIndex, args.LastLogTerm)
-	DPrintf("RequestVote :[rf.me %v Term%v] rf.votedFor:%v rf.LastLogIndex=%v rf.LastLogTerm=%v\n", rf.me, rf.currentTerm, rf.votedFor, rf.getLastLogIndex(), rf.getLastLogTerm())
+	DPrintf("RequestVote candidate:[id=%v,term=%v,Lastindex=%v,Lastterm=%v] my[id=%v,term=%v,voteFor=%v,lastindex=%v,lastterm=%v]\n", args.CandidateId, args.Term, args.LastLogIndex, args.LastLogTerm, rf.me, rf.currentTerm, rf.votedFor, rf.getLastLogIndex(), rf.getLastLogTerm())
 	if args.Term < rf.currentTerm || rf.votedFor != -1 {
 		//任期比自己小 ， 该任期票已投
 		reply.VoteGranted = false
@@ -388,7 +410,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 			rf.electionTimer.Reset(GetElectionTime())
 		}
 	}
-	DPrintf("RequestVote :[rf.me %v Term%v] RequestVote.args term %v,candidateId %v | reply term %v granted %v\n", rf.me, rf.currentTerm, args.Term, args.CandidateId, reply.Term, reply.VoteGranted)
+	DPrintf("RequestVote finish candidate:[id=%v,term=%v,Lastindex=%v,Lastterm=%v] my[id=%v,term=%v,voteFor=%v,lastindex=%v,lastterm=%v,rf.voteGranted=%v]\n", args.CandidateId, args.Term, args.LastLogIndex, args.LastLogTerm, rf.me, rf.currentTerm, rf.votedFor, rf.getLastLogIndex(), rf.getLastLogTerm(), reply.VoteGranted)
 	rf.mu.Unlock()
 }
 
@@ -404,12 +426,12 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	reply.Term = rf.currentTerm
 	reply.Success = false
 	if args.Term < rf.currentTerm {
-		DPrintf("AppendEntries apply fail args.PrevLogIndex=%v args.PrevLogTerm=%v\n", args.PrevLogIndex, args.PrevLogTerm)
+		DPrintf("AppendEntries apply fail1 args.leaderId=%v args.term=%v args.PrevLogIndex=%v args.PrevLogTerm=%v myid=%v,myterm=%v,lastIdx=%v,lastTerm=%v\n", args.LeaderId, args.Term, args.PrevLogIndex, args.PrevLogTerm, rf.me, rf.currentTerm, rf.getLastLogIndex(), rf.getLastLogTerm())
 		rf.mu.Unlock()
 		return
 	}
 	if args.PrevLogIndex > rf.getLastLogIndex() || args.PrevLogTerm != rf.log[args.PrevLogIndex].Term {
-		DPrintf("AppendEntries apply fail args.PrevLogIndex=%v args.PrevLogTerm=%v\n", args.PrevLogIndex, args.PrevLogTerm)
+		DPrintf("AppendEntries apply fail2 args.leaderId=%v args.term=%v args.PrevLogIndex=%v args.PrevLogTerm=%v myid=%v,myterm=%v,lastIdx=%v,lastTerm=%v\n", args.LeaderId, args.Term, args.PrevLogIndex, args.PrevLogTerm, rf.me, rf.currentTerm, rf.getLastLogIndex(), rf.getLastLogTerm())
 		rf.mu.Unlock()
 		return
 	}
@@ -458,7 +480,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		}
 		rf.commitIndex = tmpLastIndex
 	}
-	DPrintf("AppendEntries finish rf.me=%v reply.Suceess=%v len(rf.log)=%v rf.commitIndex=%v\n", rf.me, reply.Success, len(rf.log), rf.commitIndex)
+	DPrintf("AppendEntries apply finish args.leaderId=%v args.term=%v args.PrevLogIndex=%v args.PrevLogTerm=%v myid=%v,myterm=%v,lastIdx=%v,lastTerm=%v,len(log)=%v\n", args.LeaderId, args.Term, args.PrevLogIndex, args.PrevLogTerm, rf.me, rf.currentTerm, rf.getLastLogIndex(), rf.getLastLogTerm(), len(rf.log))
 	rf.mu.Unlock()
 }
 
@@ -487,6 +509,13 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 		rf.log = append(rf.log, logEntry)
 		rf.nextIndex[rf.me] = rf.getLastLogIndex() + 1
 		DPrintf("Start rf.me=%v rf.state=%v cmd=%v len(rf.log)=%v\n", rf.me, rf.state, command, len(rf.log))
+		for i := 0; i < len(rf.peers); i++ {
+			if i != rf.me {
+				var args AppendEntriesArgs
+				var reply AppendEntriesReply
+				go rf.sendAppendEntries(i, &args, &reply)
+			}
+		}
 	}
 	rf.mu.Unlock()
 	return index, term, isLeader
@@ -519,66 +548,6 @@ func (rf *Raft) getLastLogTerm() int {
 	return rf.log[len(rf.log)-1].Term
 }
 
-func (rf *Raft) broadCastHeartBeat() {
-	rf.mu.Lock()
-	DPrintf("rf.me=%v will broadCast", rf.me)
-	for i := 0; i < len(rf.peers); i++ {
-		DPrintf("i=%v rf.nextIndex=%v", i, rf.nextIndex[i])
-	}
-	//state:=rf.state
-	rf.mu.Unlock()
-	//可能会出现此时刚好不是leader，但是却发送了消息
-
-	rf.mu.Lock()
-	if rf.state == stateLeader {
-		for i := 0; i < len(rf.peers); i++ {
-			if i != rf.me {
-				var reply AppendEntriesReply
-				args := AppendEntriesArgs{
-					Term:         rf.currentTerm,
-					LeaderId:     rf.me,
-					LeaderCommit: rf.commitIndex,
-				}
-				idx := rf.nextIndex[i] - 1
-				args.PrevLogIndex = rf.log[idx].Index
-				args.PrevLogTerm = rf.log[idx].Term
-				args.Entries = make([]LogEntry, rf.getLastLogIndex()+1-rf.nextIndex[i])
-				copy(args.Entries, rf.log[rf.nextIndex[i]:rf.getLastLogIndex()+1])
-				DPrintf("sendAppendEntries args1:args.LeaderId=%v rf.currentTerm=%v server=%v args.LeaderCommit=%v args.PrevLogIndex=%v args.PrevLogTerm=%v len(logEntry)=%v", args.LeaderId, rf.currentTerm, i, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
-				rf.mu.Unlock()
-				go rf.sendAppendEntries(i, &args, &reply)
-			} else {
-				rf.mu.Unlock()
-			}
-		}
-	} else {
-		rf.mu.Unlock()
-	}
-
-}
-
-func (rf *Raft) startElect() {
-	rf.mu.Lock()
-	requestVoteArgs := RequestVoteArgs{
-		Term:         rf.currentTerm,
-		CandidateId:  rf.me,
-		LastLogIndex: rf.getLastLogIndex(),
-		LastLogTerm:  rf.getLastLogTerm(),
-	}
-	rf.mu.Unlock()
-
-	rf.mu.Lock()
-	state := rf.state
-	rf.mu.Unlock()
-	if state == stateCandidate {
-		for i := 0; i < len(rf.peers); i++ {
-			var requestVoteReply RequestVoteReply
-			go rf.sendRequestVote(i, &requestVoteArgs, &requestVoteReply)
-		}
-	}
-
-}
-
 func (rf *Raft) stateMachine(state int) {
 	rf.mu.Lock()
 	DPrintf("stateMachine state=%v rf.me=%v rf.currentTerm=%v rf.state=%v len(rf.log)=%v rf.commitIndex=%v", state, rf.me, rf.currentTerm, rf.state, len(rf.log), rf.commitIndex)
@@ -604,7 +573,11 @@ func (rf *Raft) stateMachine(state int) {
 		}
 	case stateCandidate:
 		if state == electReady {
-			rf.startElect()
+			for i := 0; i < len(rf.peers); i++ {
+				var args RequestVoteArgs
+				var reply RequestVoteReply
+				go rf.sendRequestVote(i, &args, &reply)
+			}
 		} else if state == electTimeOut {
 			rf.mu.Lock()
 			DPrintf("stateMachine state=electTimeOut :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
@@ -620,7 +593,13 @@ func (rf *Raft) stateMachine(state int) {
 			rf.mu.Lock()
 			DPrintf("stateMachine state=heartBeat :[Peer%v Term%v state%v]", rf.me, rf.currentTerm, rf.state)
 			rf.mu.Unlock()
-			rf.broadCastHeartBeat()
+			for i := 0; i < len(rf.peers); i++ {
+				if i != rf.me {
+					var args AppendEntriesArgs
+					var reply AppendEntriesReply
+					go rf.sendAppendEntries(i, &args, &reply)
+				}
+			}
 		}
 	}
 
