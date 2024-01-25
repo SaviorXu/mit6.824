@@ -14,4 +14,3 @@ while true;do
     go test -run 2B -race >> $file
     count=$((count+1))
 done
-

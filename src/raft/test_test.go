@@ -817,10 +817,16 @@ func TestFigure8Unreliable2C(t *testing.T) {
 		}
 		leader := -1
 		for i := 0; i < servers; i++ {
-			_, _, ok := cfg.rafts[i].Start(rand.Int() % 10000)
+			num := rand.Int() % 10000
+			_, _, ok := cfg.rafts[i].Start(num)
 			if ok && cfg.connected[i] {
+				fmt.Printf("send leader %v cmd=%v\n", i, num)
 				leader = i
 			}
+		}
+
+		if leader != -1 {
+			fmt.Println("leader is ", leader)
 		}
 
 		if (rand.Int() % 1000) < 100 {
@@ -843,6 +849,22 @@ func TestFigure8Unreliable2C(t *testing.T) {
 				nup += 1
 			}
 		}
+
+		for i := 0; i < servers; i++ {
+			if !cfg.connected[i] {
+				fmt.Printf("server=%v is not connected\n", i)
+			}
+		}
+
+		fmt.Println("loop=====")
+		for i := 0; i < servers; i++ {
+			cfg.rafts[i].mu.Lock()
+			fmt.Printf("rf.me=%v rf.state=%v rf.currentTerm=%v rf.commitIdx=%v rf.lastIdx=%v rf.lastTerm=%v len(rf.log)=%v\n", cfg.rafts[i].me, cfg.rafts[i].state, cfg.rafts[i].currentTerm, cfg.rafts[i].commitIndex, cfg.rafts[i].getLastLogIndex(), cfg.rafts[i].getLastLogTerm(), len(cfg.rafts[i].log))
+			for j := 0; j < servers; j++ {
+				fmt.Printf("server=%v nextIdx[%v]=%v\n", i, j, cfg.rafts[i].nextIndex[j])
+			}
+			cfg.rafts[i].mu.Unlock()
+		}
 	}
 
 	for i := 0; i < servers; i++ {
@@ -851,7 +873,27 @@ func TestFigure8Unreliable2C(t *testing.T) {
 		}
 	}
 
+	fmt.Println("before=====")
+	for i := 0; i < servers; i++ {
+		cfg.rafts[i].mu.Lock()
+		fmt.Printf("rf.me=%v rf.currentTerm=%v rf.state=%v rf.commitIdx=%v rf.lastIdx=%v rf.lastTerm=%v rf.cmd=%v len(rf.log)=%v\n", cfg.rafts[i].me, cfg.rafts[i].currentTerm, cfg.rafts[i].state, cfg.rafts[i].commitIndex, cfg.rafts[i].getLastLogIndex(), cfg.rafts[i].getLastLogTerm(), cfg.rafts[i].log[cfg.rafts[i].getLastLogIndex()].Command, len(cfg.rafts[i].log))
+		for j := 0; j < len(cfg.rafts[i].log); j++ {
+			fmt.Printf("idx=%v term=%v cmd=%v\n", cfg.rafts[i].log[j].Index, cfg.rafts[i].log[j].Term, cfg.rafts[i].log[j].Command)
+		}
+		cfg.rafts[i].mu.Unlock()
+	}
+
 	cfg.one(rand.Int()%10000, servers, true)
+
+	fmt.Println("after=====")
+	for i := 0; i < servers; i++ {
+		cfg.rafts[i].mu.Lock()
+		fmt.Printf("rf.me=%v rf.currentTerm=%v rf.commitIdx=%v rf.lastIdx=%v rf.lastTerm=%v rf.cmd=%v len(rf.log)=%v\n", cfg.rafts[i].me, cfg.rafts[i].currentTerm, cfg.rafts[i].commitIndex, cfg.rafts[i].getLastLogIndex(), cfg.rafts[i].getLastLogTerm(), cfg.rafts[i].log[cfg.rafts[i].getLastLogIndex()].Command, len(cfg.rafts[i].log))
+		for j := 0; j <= cfg.rafts[i].commitIndex; j++ {
+			fmt.Printf("idx=%v term=%v cmd=%v\n", cfg.rafts[i].log[j].Index, cfg.rafts[i].log[j].Term, cfg.rafts[i].log[j].Command)
+		}
+		cfg.rafts[i].mu.Unlock()
+	}
 
 	cfg.end()
 }
