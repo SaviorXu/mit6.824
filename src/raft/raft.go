@@ -348,7 +348,7 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 					rf.votedFor = -1
 					rf.persist()
 				} else {
-					if rf.state == stateCandidate {
+					if rf.state == stateCandidate && args.Term == rf.currentTerm {
 						if reply.VoteGranted {
 							rf.voteSum += 1
 						}
