@@ -6,11 +6,11 @@ while true;do
     num=$((count%5))
     if [ $((num)) -eq 0 ]; then
         tmp=$((count/5))
-        file="${file_prefix}2C_${tmp}.txt"
-        if [ $((tmp)) -gt 100 ];then 
+        file="${file_prefix}2D_${tmp}.txt"
+        if [ $((tmp)) -gt 10 ];then 
             break
         fi
     fi
-    go test -run 2C -race >> $file
+    go test -run 2D -race >> $file
     count=$((count+1))
 done

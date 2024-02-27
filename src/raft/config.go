@@ -141,8 +141,8 @@ func (cfg *config) checkLogs(i int, m ApplyMsg) (string, bool) {
 	err_msg := ""
 	v := m.Command
 	for j := 0; j < len(cfg.logs); j++ {
-		// xx, yy := cfg.logs[j][m.CommandIndex]
-		// fmt.Println("j=", j, " xx=", xx, " yy=", yy, " m.CommandIndex=", m.CommandIndex)
+		xx, yy := cfg.logs[j][m.CommandIndex]
+		fmt.Println("j=", j, " xx=", xx, " yy=", yy, " m.CommandIndex=", m.CommandIndex)
 		if old, oldok := cfg.logs[j][m.CommandIndex]; oldok && old != v {
 			log.Printf("%v: log %v; server %v\n", i, cfg.logs[i], cfg.logs[j])
 			// some server has already committed a different value for this entry!
@@ -162,7 +162,7 @@ func (cfg *config) checkLogs(i int, m ApplyMsg) (string, bool) {
 // contents
 func (cfg *config) applier(i int, applyCh chan ApplyMsg) {
 	for m := range applyCh {
-		// fmt.Println("CommandValid=", m.CommandValid, " m.Command=", m.Command, " m.CommandIndex=", m.CommandIndex)
+		fmt.Println("i=", i, "CommandValid=", m.CommandValid, " m.Command=", m.Command, " m.CommandIndex=", m.CommandIndex)
 		if m.CommandValid == false {
 			// ignore other types of ApplyMsg
 		} else {
